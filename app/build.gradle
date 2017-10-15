@@ -10,9 +10,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        sourceSets {
+            main{
+                jniLibs.srcDirs = ['libs']
+            }
+        }
         externalNativeBuild {
             cmake {
                 cppFlags "-frtti -fexceptions"
+                abiFilters 'armeabi'
             }
         }
     }
