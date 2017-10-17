@@ -5,6 +5,7 @@
 #include <SLES/OpenSLES_Android.h>
 #include <assert.h>
 #include "FFmpegMusic.h"
+#include "FFmpegVideo.h"
 
 #define LOGI(FORMAT,...) __android_log_print(ANDROID_LOG_INFO,"jason",FORMAT,##__VA_ARGS__);
 #define LOGE(FORMAT,...) __android_log_print(ANDROID_LOG_ERROR,"jason",FORMAT,##__VA_ARGS__);
@@ -74,9 +75,9 @@ Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject inst
     (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
     //  获取混音器接口
     (*outputMixObject)->GetInterface(outputMixObject, SL_IID_ENVIRONMENTALREVERB, &outputMixEnvironmentReverb);
-    if(SL_RESULT_SUCCESS == sLresult) {
+//    if(SL_RESULT_SUCCESS == sLresult) {
+//    }
         (*outputMixEnvironmentReverb)->SetEnvironmentalReverbProperties(outputMixEnvironmentReverb, &settings);
-    }
 
     int rate;
     int channels;
@@ -172,4 +173,22 @@ void shutdown() {
         engineEngine = NULL;
     }
     realase();
+}
+
+extern "C"
+
+JNIEXPORT void JNICALL
+Java_com_thedream_cz_myndkproject_ndk_VideoSynthesizer_compound(JNIEnv *env, jobject instance,
+                                                                jstring input_one_,
+                                                                jstring input_two_,
+                                                                jstring output_) {
+    const char *input_one = env->GetStringUTFChars(input_one_, 0);
+    const char *input_two = env->GetStringUTFChars(input_two_, 0);
+    const char *output = env->GetStringUTFChars(output_, 0);
+
+    compound(input_one, output);
+
+    env->ReleaseStringUTFChars(input_one_, input_one);
+    env->ReleaseStringUTFChars(input_two_, input_two);
+    env->ReleaseStringUTFChars(output_, output);
 }

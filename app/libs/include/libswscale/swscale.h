@@ -204,7 +204,7 @@ struct SwsContext *sws_getContext(int srcW, int srcH, enum AVPixelFormat srcForm
  * non-sequential order the behavior of the function is undefined.
  *
  * @param c         the scaling context previously created with
- *                  sws_getContext()
+ *                  sws_getContext()do not build command line programs
  * @param srcSlice  the array containing the pointers to the planes of
  *                  the source slice
  * @param srcStride the array containing the strides for each plane of
