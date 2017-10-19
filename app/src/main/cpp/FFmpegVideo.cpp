@@ -3,12 +3,16 @@
 //
 #include "FFmpegVideo.h"
 
-void compound(const char *inputStr, const char *outStr){
+AVFormatContext *pContext = NULL;
+
+int flush_encoder(AVFormatContext *pContext, unsigned int stream_index);
+
+void mp42yuv(const char *inputStr, const char *out_one, const char *out_two){
     //  1、注册各大组件
     av_register_all();
 
     //  2、初始化上下文
-    AVFormatContext *pContext = avformat_alloc_context();
+    pContext = avformat_alloc_context();
 
     //  3、判断输出文件有效性
     if(avformat_open_input(&pContext, inputStr, NULL, NULL) < 0) {
@@ -18,6 +22,29 @@ void compound(const char *inputStr, const char *outStr){
     if(avformat_find_stream_info(pContext, NULL) < 0) {
         LOGE("获取信息失败")
         return;
+    }
+    AVIOContext *pb = pContext->pb;
+    unsigned int nb_streams = pContext->nb_streams;
+    AVStream **streams = pContext->streams;
+    int64_t duration = pContext->duration;
+    int bit_rate = pContext->bit_rate;
+    LOGI("AVIOContext  %p -- nb_streams %d  --  streams %p  --  duration %d  --  bit_rate %d ", pb, nb_streams, *streams, duration, bit_rate);
+
+    //  元数据
+    AVDictionary *metadata = pContext->metadata;
+    AVDictionaryEntry *entry = NULL;
+//    entry = av_dict_get(metadata, "author", entry, 0);
+//    LOGI("author key %s  value %s", entry->key, entry->value);
+//
+//    entry = av_dict_get(metadata, "copyright", entry, 0);
+//    LOGI("copyright key %s  value %s", entry->key, entry->value);
+//
+//    entry = av_dict_get(metadata, "description", entry, 0);
+//    LOGI("description key %s  value %s", entry->key, entry->value);
+
+    while(entry=av_dict_get(metadata, "", entry, AV_DICT_IGNORE_SUFFIX)) {
+        //  没有值
+        LOGI("key %s value %s", entry->key, entry->value);
     }
 
     int vedio_stream_idex = -1;
@@ -61,7 +88,8 @@ void compound(const char *inputStr, const char *outStr){
                                             SWS_BILINEAR, NULL, NULL, NULL);
 
     //  wb:写入二进制文件
-    FILE *fp_yuv = fopen(outStr, "wb");
+    FILE *fp_yuv_one = fopen(out_one, "wb");
+    FILE *fp_yuv_two = fopen(out_two, "wb");
 
     //  packet入参 出参  转换上下文
     int got_frame;
@@ -69,8 +97,6 @@ void compound(const char *inputStr, const char *outStr){
     while(av_read_frame(pContext, packet) >= 0) {
         //  根据frame 进行原生绘制，解码一帧的画面并放入avFrame中
         if(avcodec_decode_video2(pCodecCtx, avFrame, &got_frame, packet) < 0) {
-            LOGE("绘制失败");
-            return ;
         }
         LOGI("解码%d  ",got_frame);
         if(got_frame) {
@@ -79,28 +105,35 @@ void compound(const char *inputStr, const char *outStr){
                       yuvFrame->data, yuvFrame->linesize);
 
             int y_size = pCodecCtx->width * pCodecCtx->height;
-            fwrite(yuvFrame->data[0], 1, y_size, fp_yuv);  //  y
-            fwrite(yuvFrame->data[1], 1, y_size / 4, fp_yuv);  //  u
-            fwrite(yuvFrame->data[2], 1, y_size / 4, fp_yuv);  //  v
+            fwrite(yuvFrame->data[0], 1, y_size, fp_yuv_one);  //  y
+            fwrite(yuvFrame->data[1], 1, y_size / 4, fp_yuv_one);  //  u
+            fwrite(yuvFrame->data[2], 1, y_size / 4, fp_yuv_one);  //  v
+
+            fwrite(yuvFrame->data[0], 1, y_size, fp_yuv_two);  //  y
+            fwrite(yuvFrame->data[1], 1, y_size / 4, fp_yuv_two);  //  u
+            fwrite(yuvFrame->data[2], 1, y_size / 4, fp_yuv_two);  //  v
         }
-        //  释放packet??
+        //  释放packet
         av_free_packet(packet);
     }
     LOGI("写入完成");
-    fclose(fp_yuv);
+    fclose(fp_yuv_one);
+    fclose(fp_yuv_two);
     av_frame_free(&avFrame);
     av_frame_free(&yuvFrame);
     avcodec_close(pCodecCtx);
-    avformat_free_context(pContext);
+
 }
 
+void compound(const char *yuv_one, const char *yuv_two, const char *output){
 
-void yuv2mp4(const char *inputStr, const char *output){
+
+}
+
+void yuv2mp4(const char *inputStr){
+
     //  1、注册各大组件
     av_register_all();
-
-    //  2、初始化上下文
-    AVFormatContext *pContext = avformat_alloc_context();
 
     FILE *in_file = fopen(inputStr, "rb");
     if(!in_file) {
@@ -118,18 +151,28 @@ void yuv2mp4(const char *inputStr, const char *output){
 
     AVFormatContext *pFormatCtx=NULL;
     //  初始化AVFormatContext结构体
-    avformat_alloc_output_context2(&pFormatCtx, NULL, NULL, out_file);
+    int result = avformat_alloc_output_context2(&pFormatCtx, NULL, NULL, out_file);
+    if(result) {
+        /**
+         * 编译ffmpeg的时候未将所需要的muxer给包含进来，这需要重新编译ffmpeg。
+         * 如需要MP4类型的muxer则在编译时加上 --enable-muxer= MP4包含MP4，
+         * 或者 --enable-muxers 包含所有ffmpeg支持的类型（这样编译出来的avformat会比较大），
+         * 然后重新编译ffmpeg就OK了
+         */
+        LOGI("初始化文件失败  out_file %s", out_file);
+        return ;
+    }
     AVOutputFormat *fmt = pFormatCtx->oformat;
 
     if(avio_open(&pFormatCtx->pb, out_file, AVIO_FLAG_READ_WRITE)) {
         LOGI("文件打开失败  out_file %s", out_file);
-        return ;
+        return;
     }
     //  初始化视频码流
     AVStream *video_st = avformat_new_stream(pFormatCtx, 0);
     if(video_st == NULL) {
         LOGE("获取视频码流失败");
-        return ;
+        return;
     }
     LOGI("视频码流对象  %p", video_st);
     video_st->time_base.num = 1;
@@ -166,17 +209,134 @@ void yuv2mp4(const char *inputStr, const char *output){
     AVCodec *pCodec = avcodec_find_encoder(pCodecCtx->codec_id);
     if(!pCodec) {
         LOGI("解码器未找到!");
-        return ;
+        return;
     }
     LOGI("解码器: %p", pCodec);
     if(avcodec_open2(pCodecCtx, pCodec, NULL) < 0) {
         LOGE("打开文件失败");
-        return ;
+        return;
     }
     //  输出格式信息
     av_dump_format(pFormatCtx, 0, out_file, 1);
 
+    //  初始化帧
+    AVFrame *frame = av_frame_alloc();
+    frame->width = pCodecCtx->width;
+    frame->height = pCodecCtx->height;
+    frame->format = pCodecCtx->pix_fmt;
+    uint8_t  *frame_buffer = (uint8_t *) av_malloc(avpicture_get_size(pCodecCtx->pix_fmt, pCodecCtx->width, pCodecCtx->height));
 
+    avpicture_fill((AVPicture *) frame, frame_buffer, pCodecCtx->pix_fmt, pCodecCtx->width, pCodecCtx->height);
 
+    //  写入头文件
+    avformat_write_header(pFormatCtx, NULL);
 
+    AVPacket packet;
+    int y_size = pCodecCtx->width * pCodecCtx->height;
+    //  创建一个数据包
+    av_new_packet(&packet, y_size);
+    if(-2) {
+        LOGI("-2是true")
+    }else {
+        LOGI("-2是false")
+    }
+    //  循环编码每一帧
+    for(int i=0; i<frameNum; i++) {
+        if(fread(frame_buffer, 1, y_size * 3 / 2, in_file) < 0) {
+            LOGE("读取每一帧失败");
+            return ;
+        }else if(feof(in_file)){
+            LOGE("到达文件末尾跳出循环");
+            break;
+        }
+        frame->data[0] = frame_buffer;
+        frame->data[1] = frame_buffer + y_size;
+        frame->data[2] = frame_buffer + y_size * 5 / 4;
+        frame->pts = i;
+        int got_frame = 0;
+
+        int ret = avcodec_encode_audio2(pCodecCtx, &packet, frame, &got_frame);
+
+        if(ret < 0) {
+            LOGE("编码失败");
+            return; ;
+        }
+
+        if(got_frame == 1) {
+            LOGI("编码成功");
+
+            packet.stream_index = video_st->index;
+            //av_packet_rescale_ts(AVPacket *pkt, AVRational tb_src, AVRational tb_dst);
+            av_packet_rescale_ts(&packet, pCodecCtx->time_base, video_st->time_base);
+            packet.pos = -1;
+            av_interleaved_write_frame(pFormatCtx, &packet);
+
+            av_free_packet(&packet);
+        }
+
+    }
+
+    int ret = flush_encoder(pFormatCtx, 0);
+    if(ret < 0) {
+        LOGE("flushing encoder failed ");
+        return ;
+    }
+
+    av_write_trailer(pFormatCtx);
+    if(video_st) {
+        avcodec_close(video_st->codec);
+        av_free(frame);
+        av_free(frame_buffer);
+    }
+    if(pFormatCtx != NULL) {
+        avio_close(pFormatCtx->pb);
+        avformat_free_context(pFormatCtx);
+    }
+
+    fclose(in_file);
+}
+
+int flush_encoder(AVFormatContext *pContext, unsigned int stream_index) {
+    int ret;
+    int got_frame;
+    AVPacket packet;
+    AVCodecContext *pCodecCtx = pContext->streams[stream_index]->codec;
+    if(!(pCodecCtx->codec->capabilities & CODEC_CAP_DELAY)) {
+        return 0;
+    }
+    while(1) {
+        LOGI("flushing stream %d endcode", stream_index);
+        packet.data = NULL;
+        packet.size = 0;
+        av_init_packet(&packet);
+        /**
+         * avcodec_encode_video2(AVCodecContext *avctx, AVPacket *avpkt,
+                          const AVFrame *frame, int *got_packet_ptr);
+         */
+        ret = avcodec_encode_video2(pCodecCtx, &packet, NULL, &got_frame);
+        av_frame_free(NULL);
+        if(ret < 0) {
+            break;
+        }
+        if(!got_frame) {
+            ret = 0;
+            break;
+        }
+        LOGI("编码成功");
+
+        packet.stream_index = stream_index;
+        // av_packet_rescale_ts(AVPacket *pkt, AVRational tb_src, AVRational tb_dst)
+        av_packet_rescale_ts(&packet, pCodecCtx->time_base, pCodecCtx->time_base);
+        //  将数据包写入frame中
+        ret = av_interleaved_write_frame(pContext, &packet);
+        if(ret < 0) {
+            break;
+        }
+
+    }
+    return ret;
+}
+
+void release_resource(){
+    avformat_free_context(pContext);
 }

@@ -5,6 +5,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+    <Button
+        android:id="@+id/btn_04"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="04轮播图问题"/>
+
+    <Button
+        android:id="@+id/btn_03"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="03Bitmap创建问题"/>
+
     <Button
         android:id="@+id/btn_02"
         android:layout_width="match_parent"

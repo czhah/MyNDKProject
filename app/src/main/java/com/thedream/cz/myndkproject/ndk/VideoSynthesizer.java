@@ -20,6 +20,6 @@ public class VideoSynthesizer {
     }
 
 
-    public native void compound(String input_one, String input_two, String output);
+    public native void compound(String input_one, String input_two, String output_one, String output_two);
 
 }

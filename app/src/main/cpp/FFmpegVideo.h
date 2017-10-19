@@ -26,6 +26,10 @@ extern "C" {
 #define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"jason",FORMAT,##__VA_ARGS__);
 #define LOGE(FORMAT, ...) __android_log_print(ANDROID_LOG_ERROR,"jason",FORMAT,##__VA_ARGS__);
 
-void compound(const char *input_one, const char *output);
+void mp42yuv(const char *input_one, const char *output_one, const char *output_two);
 
-void yuv2mp4(const char *input, const char *output);
+void compound(const char *yuv_one, const char *yuv_two, const char *output);
+
+void yuv2mp4(const char *input);
+
+void release_resource();

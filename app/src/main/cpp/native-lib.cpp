@@ -181,14 +181,17 @@ JNIEXPORT void JNICALL
 Java_com_thedream_cz_myndkproject_ndk_VideoSynthesizer_compound(JNIEnv *env, jobject instance,
                                                                 jstring input_one_,
                                                                 jstring input_two_,
-                                                                jstring output_) {
+                                                                jstring output_one_,
+                                                                jstring output_two_) {
     const char *input_one = env->GetStringUTFChars(input_one_, 0);
     const char *input_two = env->GetStringUTFChars(input_two_, 0);
-    const char *output = env->GetStringUTFChars(output_, 0);
+    const char *output_one = env->GetStringUTFChars(output_one_, 0);
+    const char *output_two = env->GetStringUTFChars(output_two_, 0);
 
-    compound(input_one, output);
-
+    mp42yuv(input_one, output_one, output_two);
+//    yuv2mp4(output);  //  有问题啊！！！
+    release_resource();
     env->ReleaseStringUTFChars(input_one_, input_one);
     env->ReleaseStringUTFChars(input_two_, input_two);
-    env->ReleaseStringUTFChars(output_, output);
+    env->ReleaseStringUTFChars(output_one_, output_two);
 }

@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.thedream.cz.myndkproject">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AutoPlayActivity" />
-        <activity android:name=".activity.VideoCompoundActivity"></activity>
+        <activity android:name=".activity.VideoCompoundActivity" />
+        <activity android:name=".activity.CustomImgAvtivity" />
+        <activity android:name=".activity.BannerActivity"></activity>
     </application>
 
 </manifest>

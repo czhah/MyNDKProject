@@ -27,18 +27,22 @@ public class VideoCompoundActivity extends AppCompatActivity {
 
         final String path_one = new File(Environment.getExternalStorageDirectory(), "video_one.mp4").getAbsolutePath();
         final String path_two = new File(Environment.getExternalStorageDirectory(), "video_two.mp4").getAbsolutePath();
-        final String output= new File(Environment.getExternalStorageDirectory(), "video_output.pcm").getAbsolutePath();
+        final String output_one= new File(Environment.getExternalStorageDirectory(), "video_output_one.pcm").getAbsolutePath();
+        final String output_two= new File(Environment.getExternalStorageDirectory(), "video_output_two.pcm").getAbsolutePath();
 
         File input = new File(path_one);
         if(input.exists()) input.delete();
-        File outputFile = new File(output);
+        File outputFile = new File(output_one);
         if(outputFile.exists()) outputFile.delete();
+
+        File outputFile2 = new File(output_two);
+        if(outputFile2.exists()) outputFile2.delete();
 
         findViewById(R.id.btn_compound).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkFile(path_one, R.raw.video_one) || checkFile(path_two, R.raw.video_two)) return ;
-                compound(path_one, path_two, output);
+                compound(path_one, path_two, output_one, output_two);
             }
         });
 
@@ -79,7 +83,7 @@ public class VideoCompoundActivity extends AppCompatActivity {
         }
     }
 
-    private void compound(String input_one, String input_two, String output) {
-        videoSynthesizer.compound(input_one, input_two, output);
+    private void compound(String input_one, String input_two, String output_one, String output_two) {
+        videoSynthesizer.compound(input_one, input_two, output_one, output_two);
     }
 }

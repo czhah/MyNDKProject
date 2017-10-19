@@ -28,6 +28,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, VideoCompoundActivity.class));
             }
         });
+
+        findViewById(R.id.btn_03).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, CustomImgAvtivity.class));
+            }
+        });
+
+        findViewById(R.id.btn_04).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, BannerActivity.class));
+            }
+        });
     }
 
 }
