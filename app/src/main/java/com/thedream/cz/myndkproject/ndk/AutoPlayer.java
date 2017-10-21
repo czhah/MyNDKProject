@@ -18,4 +18,6 @@ public class AutoPlayer {
     }
 
     public native void sound();
+
+    public native void stop();
 }
