@@ -36,16 +36,15 @@ SLObjectItf bqPlayerObject = NULL;
 SLPlayItf bqPlayerPlay;
 //  缓冲队列接口
 SLAndroidSimpleBufferQueueItf bqPlayerBufferQueue;
+
 //  声音
 SLVolumeItf  bqPlayerVolume;
-
-void bgPlayerCallback(SLAndroidSimpleBufferQueueItf pItf_, void *pVoid);
 
 const SLEnvironmentalReverbSettings settings = SL_I3DL2_ENVIRONMENT_PRESET_DEFAULT;
 size_t bufferSize;
 void *buffer;
-
-void bgPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
+//  回调
+void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
     bufferSize = 0;
     getPCM(&buffer, &bufferSize);
     if(NULL != buffer && 0 != bufferSize) {
@@ -68,19 +67,21 @@ Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject inst
 
     //  获取SLEngine接口对象，后续的操作将使用这个对象
     (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine);
-    LOGI("音频地址 %p", engineEngine);
+    LOGI("音频引擎 %p", engineEngine);
     //  用音频引擎调用函数，创建混音器
     (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 0, 0, 0);
-    //  实现混音器outputMixObject
+    //  初始化混音器outputMixObject
     (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
     //  获取混音器接口
-    (*outputMixObject)->GetInterface(outputMixObject, SL_IID_ENVIRONMENTALREVERB, &outputMixEnvironmentReverb);
-//    if(SL_RESULT_SUCCESS == sLresult) {
-//    }
+    sLresult = (*outputMixObject)->GetInterface(outputMixObject, SL_IID_ENVIRONMENTALREVERB, &outputMixEnvironmentReverb);
+    LOGI("获取混音器  %d", sLresult);
+    if(SL_RESULT_SUCCESS == sLresult) {
         (*outputMixEnvironmentReverb)->SetEnvironmentalReverbProperties(outputMixEnvironmentReverb, &settings);
+    }
 
     int rate;
     int channels;
+    //   这个方法是将mp3格式音频转化为pcm格式，并获取音频参数(帧率，通道数等)
     createFFmpeg(&rate, &channels);
     LOGI("比特率 &d  通道数 &d", rate, channels);
     //  配置信息设置
@@ -90,16 +91,18 @@ Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject inst
      * typedef struct SLDataFormat_PCM_ {
 	SLuint32 		formatType;  音频类型
 	SLuint32 		numChannels;  音频通道数
-	SLuint32 		samplesPerSec;
-	SLuint32 		bitsPerSample;  音频格式  16位、24位、
-	SLuint32 		containerSize;
-	SLuint32 		channelMask;  通道类型
-	SLuint32		endianness;
+	SLuint32 		samplesPerSec;  采样率
+	SLuint32 		bitsPerSample;  音频格式(采样位数)  16位、24位、
+	SLuint32 		containerSize;  包含位数
+	SLuint32 		channelMask;  通道类型(立体声)
+	SLuint32		endianness;  end标志位
 } SLDataFormat_PCM;
      */
     //  pcm格式, 双通道，xxx，16位，左前、右前方向，xxx
-    SLDataFormat_PCM pcm = {SL_DATAFORMAT_PCM, 2, SL_SAMPLINGRATE_44_1, SL_PCMSAMPLEFORMAT_FIXED_16
-    ,SL_PCMSAMPLEFORMAT_FIXED_16, SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT, SL_BYTEORDER_LITTLEENDIAN};
+    SLDataFormat_PCM pcm = {SL_DATAFORMAT_PCM, channels,
+                            SL_SAMPLINGRATE_44_1, SL_PCMSAMPLEFORMAT_FIXED_16,
+                            SL_PCMSAMPLEFORMAT_FIXED_16, SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
+                            SL_BYTEORDER_LITTLEENDIAN};
 
     //  新建一个数据源 将上述配置信息放到这个数据源中
     /*
@@ -120,7 +123,6 @@ Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject inst
 
     const SLboolean req[3] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
 
-    int result = SL_RESULT_SUCCESS == sLresult;
     //  创建音频播放器
     /**
      * 	SLresult (*CreateAudioPlayer) (
@@ -133,28 +135,44 @@ Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject inst
 		const SLboolean * pInterfaceRequired
 	);
      */
-    (*engineEngine)->CreateAudioPlayer(engineEngine, &bqPlayerObject, &slDataSource, &audioSnk, 3, ids, req);
+    sLresult = (*engineEngine)->CreateAudioPlayer(engineEngine, &bqPlayerObject,
+                                                  &slDataSource, &audioSnk,
+                                                  3, ids, req);
+    LOGI("创建播放器  %p  结果 %d", engineEngine, sLresult);
 
     //  初始化播放器
-    (*bqPlayerObject)->Realize(bqPlayerObject, SL_BOOLEAN_FALSE);
+    sLresult = (*bqPlayerObject)->Realize(bqPlayerObject, SL_BOOLEAN_FALSE);
+    LOGI("初始化播放器  %p  结果 %d", bqPlayerObject, sLresult);
 
     //  获取player接口
-    (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_PLAY, &bqPlayerPlay);
+    sLresult = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_PLAY, &bqPlayerPlay);
+    LOGI("获取player接口 结果 %d", sLresult);
 
-    //  设置播放状态
+    //  获取缓冲队列接口
+    sLresult = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_BUFFERQUEUE, &bqPlayerBufferQueue);
+    LOGI("获取缓冲队列接口  结果 %d", sLresult);
 
-    //  注册回调缓冲区   获取缓冲队列接口
-    (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_BUFFERQUEUE, &bqPlayerBufferQueue);
+    //  注册回调缓冲区
+    (*bqPlayerBufferQueue)->RegisterCallback(bqPlayerBufferQueue, bqPlayerCallback, NULL);
+
     //  获取音量接口
-    (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume);
+    sLresult = (*bqPlayerObject)->GetInterface(bqPlayerObject, SL_IID_VOLUME, &bqPlayerVolume);
+    LOGI("获取音量接口  结果 %d", sLresult);
 
     //  获取播放状态
-    (*bqPlayerPlay)->SetPlayState(bqPlayerPlay, SL_PLAYSTATE_PLAYING);
+    sLresult = (*bqPlayerPlay)->SetPlayState(bqPlayerPlay, SL_PLAYSTATE_PLAYING);
 
-    bgPlayerCallback(bqPlayerBufferQueue, NULL);
+    bqPlayerCallback(bqPlayerBufferQueue, NULL);
 }
 
 void shutdown() {
+
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_stop(JNIEnv *env, jobject instance) {
+
     if(bqPlayerObject != NULL) {
         (*bqPlayerObject)->Destroy(bqPlayerObject);
         bqPlayerObject = NULL;
@@ -176,7 +194,6 @@ void shutdown() {
 }
 
 extern "C"
-
 JNIEXPORT void JNICALL
 Java_com_thedream_cz_myndkproject_ndk_VideoSynthesizer_compound(JNIEnv *env, jobject instance,
                                                                 jstring input_one_,

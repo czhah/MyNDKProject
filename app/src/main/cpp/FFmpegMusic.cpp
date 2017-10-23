@@ -11,6 +11,7 @@ AVPacket *packet;
 SwrContext *swrContext;
 uint8_t  *out_buffer;
 int audio_stream_idx = -1;
+int out_channer_nb;
 int createFFmpeg(int *rate, int *channel) {
     av_register_all();
 
@@ -45,7 +46,7 @@ int createFFmpeg(int *rate, int *channel) {
     LOGI("获取视频编码器上下文  %p", pCodecCtx);
     pCodec = avcodec_find_decoder(pCodecCtx->codec->id);
     if(avcodec_open2(pCodecCtx, pCodec, NULL) < 0) {
-
+        //  这个方法有点不知道干嘛的？
     }
 
     avFrame = av_frame_alloc();
@@ -54,6 +55,12 @@ int createFFmpeg(int *rate, int *channel) {
 
     //  mp3 编码格式 转换为 pcm
     swrContext = swr_alloc();
+    out_buffer = (uint8_t *) av_malloc(44100 * 2);
+    uint64_t out_ch_layout = AV_CH_LAYOUT_STEREO;
+    //  输出采样位数 16位
+    enum AVSampleFormat out_format = AV_SAMPLE_FMT_S16;
+    //  输出的采样率必须与输入相同
+    int out_sample_rate = pCodecCtx->sample_rate;
 
     /**
      * swr_alloc_set_opts(struct SwrContext *s,
@@ -61,22 +68,22 @@ int createFFmpeg(int *rate, int *channel) {
       int64_t  in_ch_layout, enum AVSampleFormat  in_sample_fmt, int  in_sample_rate,
       int log_offset, void *log_ctx);
      */
-    swr_alloc_set_opts(swrContext, AV_CH_LAYOUT_STEREO, AV_SAMPLE_FMT_S16, pCodecCtx->sample_rate,
-    pCodecCtx->channel_layout, pCodecCtx->sample_fmt, pCodecCtx->sample_rate, 0, 0);
+    swr_alloc_set_opts(swrContext, out_ch_layout, out_format, out_sample_rate,
+    pCodecCtx->channel_layout, pCodecCtx->sample_fmt, pCodecCtx->sample_rate, 0, NULL);
 
+    //  Initialize context after user parameters have been set.
     swr_init(swrContext);
 
+    out_channer_nb = av_get_channel_layout_nb_channels(out_ch_layout);
     *rate = pCodecCtx->sample_rate;
     *channel = pCodecCtx->channels;
 
-    out_buffer = (uint8_t *) av_malloc(44100 * 2);
     LOGI("初始化FFmpeg完成");
     return 0;
 }
 
 void getPCM(void **outBuffer, size_t *size){
     int got_frame;
-    int out_channer_nb = av_get_channel_layout_nb_channels(AV_CH_LAYOUT_STEREO);
     while(av_read_frame(pFormatCtx, packet) >= 0) {
         LOGI("stream_index &d", packet->stream_index);
         if(packet->stream_index == audio_stream_idx) {
@@ -92,7 +99,6 @@ void getPCM(void **outBuffer, size_t *size){
         }
     }
 }
-
 
 void realase(){
     av_free_packet(packet);
