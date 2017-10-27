@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.thedream.cz.myndkproject.R;
+import com.thedream.cz.myndkproject.customview.banner.view.CircleImageView;
 
 public class CustomImgAvtivity extends AppCompatActivity {
 
@@ -28,12 +29,12 @@ public class CustomImgAvtivity extends AppCompatActivity {
         setContentView(R.layout.activity_custom_img_avtivity);
 
         img1 = (ImageView) findViewById(R.id.iv_img1);
-        img2 = (ImageView) findViewById(R.id.iv_img2);
+        img2 = (CircleImageView) findViewById(R.id.iv_img2);
 
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                img1.setImageBitmap(createBitmap(BitmapFactory.decodeResource(CustomImgAvtivity.this.getResources(), R.mipmap.one)));
+                img2.setImageBitmap(BitmapFactory.decodeResource(CustomImgAvtivity.this.getResources(), R.mipmap.one));
             }
         });
 
@@ -41,7 +42,7 @@ public class CustomImgAvtivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                img2.setImageBitmap(createBitmap(BitmapFactory.decodeResource(CustomImgAvtivity.this.getResources(), R.mipmap.two)));
+                img2.setImageBitmap(BitmapFactory.decodeResource(CustomImgAvtivity.this.getResources(), R.mipmap.two));
             }
         });
     }

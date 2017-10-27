@@ -16,16 +16,21 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"/>
+
             <ImageView
                 android:id="@+id/iv_img1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_launcher"/>
 
-            <ImageView
+            <com.thedream.cz.myndkproject.customview.banner.view.CircleImageView
                 android:id="@+id/iv_img2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:src="@mipmap/ic_launcher"/>
 
         </LinearLayout>

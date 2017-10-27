@@ -23,7 +23,8 @@
         <activity android:name=".activity.AutoPlayActivity" />
         <activity android:name=".activity.VideoCompoundActivity" />
         <activity android:name=".activity.CustomImgAvtivity" />
-        <activity android:name=".activity.BannerActivity"></activity>
+        <activity android:name=".activity.BannerActivity" />
+        <activity android:name=".activity.SideDeleteActivity"></activity>
     </application>
 
 </manifest>
