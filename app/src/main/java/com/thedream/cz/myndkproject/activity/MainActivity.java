@@ -15,7 +15,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        findViewById(R.id.btn_06).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, MySkinActivity.class));
+            }
+        });
         findViewById(R.id.btn_05).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
