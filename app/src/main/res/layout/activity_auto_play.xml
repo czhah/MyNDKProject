@@ -12,4 +12,11 @@
         android:layout_height="wrap_content"
         android:text="播放"/>
 
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_play"
+        android:text="停止" />
+
 </android.support.constraint.ConstraintLayout>

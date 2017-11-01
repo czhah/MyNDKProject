@@ -74,6 +74,7 @@ public class SkinManager {
                 String path = file.getAbsolutePath();
                 PackageManager packageManager = mContext.getPackageManager();
                 PackageInfo packageInfo = packageManager.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+                if (packageInfo == null) return null;
                 skinPackageName = packageInfo.packageName;
                 try {
                     AssetManager assetManager = AssetManager.class.newInstance();

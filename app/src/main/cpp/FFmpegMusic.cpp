@@ -28,23 +28,23 @@ int createFFmpeg(int *rate, int *channel) {
         LOGE("%s", "获取视频信息失败");
         return -1;
     }
-
+    LOGI("nb_streams %d", pFormatCtx->nb_streams)
     for(int i=0; i < pFormatCtx->nb_streams; i++) {
         if(pFormatCtx->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO) {
             audio_stream_idx = i;
             break;
         }
     }
-
+    LOGI("audio_stream_idx %d", audio_stream_idx)
     if(audio_stream_idx == -1) {
         LOGE("%s", "不包含录音信息");
         return -1;
     }
 
-    //  获取音频编解码器
+//    //  获取音频编解码器
     pCodecCtx = pFormatCtx->streams[audio_stream_idx]->codec;
     LOGI("获取视频编码器上下文  %p", pCodecCtx);
-    pCodec = avcodec_find_decoder(pCodecCtx->codec->id);
+    pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
     if(avcodec_open2(pCodecCtx, pCodec, NULL) < 0) {
         //  这个方法有点不知道干嘛的？
     }

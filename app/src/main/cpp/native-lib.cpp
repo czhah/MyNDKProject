@@ -72,7 +72,7 @@ Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject inst
     (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 0, 0, 0);
     //  初始化混音器outputMixObject
     (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
-    //  获取混音器接口
+//    //  获取混音器接口
     sLresult = (*outputMixObject)->GetInterface(outputMixObject, SL_IID_ENVIRONMENTALREVERB, &outputMixEnvironmentReverb);
     LOGI("获取混音器  %d", sLresult);
     if(SL_RESULT_SUCCESS == sLresult) {
@@ -81,7 +81,7 @@ Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject inst
 
     int rate;
     int channels;
-    //   这个方法是将mp3格式音频转化为pcm格式，并获取音频参数(帧率，通道数等)
+//    //   这个方法是将mp3格式音频转化为pcm格式，并获取音频参数(帧率，通道数等)
     createFFmpeg(&rate, &channels);
     LOGI("比特率 &d  通道数 &d", rate, channels);
     //  配置信息设置
