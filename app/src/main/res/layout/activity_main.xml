@@ -5,6 +5,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/btn_08"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="08LinkedList" />
+
+    <Button
+        android:id="@+id/btn_07"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="07ConstraintLayout详解" />
 
     <Button
         android:id="@+id/btn_06"

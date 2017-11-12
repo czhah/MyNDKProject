@@ -14,7 +14,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        findViewById(R.id.btn_08).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, MyLinkedListActivity.class));
+            }
+        });
+        findViewById(R.id.btn_07).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, MyConstraintLayout.class));
+            }
+        });
         findViewById(R.id.btn_06).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
