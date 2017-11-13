@@ -1,8 +1,10 @@
 package com.thedream.cz.myndkproject.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.thedream.cz.myndkproject.R;
@@ -15,6 +17,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewById(R.id.btn_08).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("cz", "低版本不支持:" + Build.VERSION.SDK_INT);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivity(new Intent(MainActivity.this, BLEActivity.class));
+                }
+            }
+        });
+        findViewById(R.id.btn_07).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, MyLinkListActivity.class));
+            }
+        });
         findViewById(R.id.btn_06).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -64,7 +64,7 @@ public class SkinManager {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                callback.onPrepare();
+                if (callback != null) callback.onPrepare();
             }
 
             @Override
@@ -74,7 +74,6 @@ public class SkinManager {
                 String path = file.getAbsolutePath();
                 PackageManager packageManager = mContext.getPackageManager();
                 PackageInfo packageInfo = packageManager.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
-                if (packageInfo == null) return null;
                 skinPackageName = packageInfo.packageName;
                 try {
                     AssetManager assetManager = AssetManager.class.newInstance();
@@ -98,18 +97,18 @@ public class SkinManager {
                     SkinConfig.saveCustomSkinPath(mContext, skinPath);
                     isDefaultSkin = false;
                     notifySkinUpdate();
-                    callback.onSuccess();
+                    if (callback != null) callback.onSuccess();
                 } else {
                     SkinConfig.saveDefaultSkinPath(mContext);
                     isDefaultSkin = true;
-                    callback.onFail();
+                    if (callback != null) callback.onFail();
                 }
             }
 
             @Override
             protected void onCancelled() {
                 super.onCancelled();
-                callback.onFail();
+                if (callback != null) callback.onFail();
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{skinPath});
     }

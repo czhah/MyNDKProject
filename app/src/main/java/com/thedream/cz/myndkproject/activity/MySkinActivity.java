@@ -46,10 +46,6 @@ public class MySkinActivity extends BaseActivity {
                         Log.i(TAG, "onFail");
                     }
 
-                    @Override
-                    public void onCancel() {
-                        Log.i(TAG, "onCancel");
-                    }
                 });
             }
         });
