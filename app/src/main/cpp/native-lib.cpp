@@ -58,7 +58,6 @@ void bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_thedream_cz_myndkproject_ndk_AutoPlayer_sound(JNIEnv *env, jobject instance) {
-
     SLresult sLresult;
     slCreateEngine(&engineObject, 0, NULL, 0, NULL, NULL);
 

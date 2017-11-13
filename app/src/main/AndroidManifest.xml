@@ -36,6 +36,7 @@
         <activity android:name=".activity.MySkinActivity" />
         <activity android:name=".activity.MyLinkListActivity" />
         <activity android:name=".activity.BLEActivity"></activity>
+        <activity android:name=".activity.MyConstraintLayout" />
     </application>
 
 </manifest>
