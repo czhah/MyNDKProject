@@ -1,6 +1,5 @@
 package com.thedream.cz.myndkproject.activity;
 
-import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
