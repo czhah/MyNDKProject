@@ -185,36 +185,32 @@ public class BluetoothService extends Service {
         String uuid = characteristic.getUuid().toString();
         if (BluetoolGattAttributes.FFE1.equals(uuid)) {
             //  时间读取
-            final byte[] value = characteristic.getValue();
-            if (value != null && value.length > 0) {
-                String str = BluetoothDeviceUtil.bcd2Str(value);
+            String str = dispatchData(characteristic.getValue(), false);
+            if (str != null) {
                 PrintUtil.printCZ("时间读取或写入:" + str);
                 intent.putExtra(EXTRA_DATA, str);
                 intent.putExtra(EXTRA_TYPE, uuid);
             }
         } else if (BluetoolGattAttributes.FFE2.equals(uuid)) {
-            //  时间读取
-            final byte[] value = characteristic.getValue();
-            if (value != null && value.length > 0) {
-                String str = BluetoothDeviceUtil.bcd2Str(value);
+            //  时间提醒
+            String str = dispatchData(characteristic.getValue(), false);
+            if (str != null) {
                 PrintUtil.printCZ("设置提醒:" + str);
                 intent.putExtra(EXTRA_DATA, str);
                 intent.putExtra(EXTRA_TYPE, uuid);
             }
         } else if (BluetoolGattAttributes.FFE3.equals(uuid)) {
             //  时间读取
-            final byte[] value = characteristic.getValue();
-            if (value != null && value.length > 0) {
-                String str = BluetoothDeviceUtil.bcd2Str(value);
-                PrintUtil.printCZ("测试最大长度:" + str);
+            String str = dispatchData(characteristic.getValue(), false);
+            if (str != null) {
+                PrintUtil.printCZ("没有任何处理:" + str);
                 intent.putExtra(EXTRA_DATA, str);
                 intent.putExtra(EXTRA_TYPE, uuid);
             }
         } else if (BluetoolGattAttributes.FFF1.equals(uuid)) {
             //  时间读取
-            final byte[] value = characteristic.getValue();
-            if (value != null && value.length > 0) {
-                String str = BluetoothDeviceUtil.bcd2Str(value);
+            String str = dispatchData(characteristic.getValue(), true);
+            if (str != null) {
                 PrintUtil.printCZ("读取动作:" + str);
                 intent.putExtra(EXTRA_DATA, str);
                 intent.putExtra(EXTRA_TYPE, uuid);
@@ -230,6 +226,27 @@ public class BluetoothService extends Service {
             }
         }
         sendBroadcast(intent);
+    }
+
+    private String dispatchData(byte[] value, boolean isAction) {
+        if (value != null && value.length > 0) {
+            final StringBuffer stringBuffer = new StringBuffer(value.length);
+            final int n = isAction ? 2 : 0;  //  如果是传送动作数据则对最后两位做特殊处理
+            for (int i = 0; i < value.length; i++) {
+                if (i < value.length - n) {
+                    int b = BluetoothDeviceUtil.bcd2int(value[i]);
+                    if (i == value.length - 3) {
+                        b = (int) value[i];
+                    }
+                    stringBuffer.append(b + " ");
+                } else {
+                    stringBuffer.append(BluetoothDeviceUtil.turn16to10(String.format("%02x%02x", value[value.length - 1], value[value.length - 2])));
+                    break;
+                }
+            }
+            return stringBuffer.toString();
+        }
+        return null;
     }
 
     public class LocalBinder extends Binder {
@@ -347,23 +364,24 @@ public class BluetoothService extends Service {
      *
      * @param characteristic The characteristic to read from.
      */
-    private void readCharacteristic(BluetoothGattCharacteristic characteristic) {
+    private boolean readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
+            return false;
         }
         boolean readEnable = mBluetoothGatt.readCharacteristic(characteristic);
         PrintUtil.printCZ("readEnable：" + readEnable);
+        return readEnable;
     }
 
-    public void readCharacteristic(String serviceUUID, String characteristicUUID) {
+    public boolean readCharacteristic(String serviceUUID, String characteristicUUID) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
+            return false;
         }
         BluetoothGattCharacteristic characteristic = getSupportedGattCharacteristic(serviceUUID, characteristicUUID);
-        if (characteristic == null) return;
-        readCharacteristic(characteristic);
+        if (characteristic == null) return false;
+        return readCharacteristic(characteristic);
     }
 
     /**
@@ -371,13 +389,14 @@ public class BluetoothService extends Service {
      *
      * @param characteristic
      */
-    private void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+    private boolean writeCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
-            return;
+            return false;
         }
         boolean writeEnable = mBluetoothGatt.writeCharacteristic(characteristic);
         PrintUtil.printCZ("writeEnable: " + writeEnable);
+        return writeEnable;
     }
 
     public boolean writeCharacteristic(String serviceUUID, String characteristicUUID, byte[] date) {
@@ -389,8 +408,7 @@ public class BluetoothService extends Service {
         BluetoothGattCharacteristic characteristic = getSupportedGattCharacteristic(serviceUUID, characteristicUUID);
         if (characteristic == null) return false;
         characteristic.setValue(date);
-        writeCharacteristic(characteristic);
-        return false;
+        return writeCharacteristic(characteristic);
     }
 
     /**

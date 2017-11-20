@@ -108,7 +108,7 @@ public class MyBLEConnectActivity extends AppCompatActivity {
         btnTTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                testMaxTime();
+                remindTime();
             }
         });
         btnATime = (Button) findViewById(R.id.btn_time_a);
@@ -179,7 +179,7 @@ public class MyBLEConnectActivity extends AppCompatActivity {
         return data;
     }
 
-    private void testMaxTime() {
+    private void remindTime() {
         if (!isConnect) return;
         byte[] data = new byte[5];
         data[0] = (byte) BluetoothDeviceUtil.int2bcd(11);
@@ -196,6 +196,11 @@ public class MyBLEConnectActivity extends AppCompatActivity {
         mBluetoothLeService.setCharacteristicNotification(BluetoolGattAttributes.FFF0, BluetoolGattAttributes.FFF1, true);
     }
 
+    /**
+     * 远程设备特征改变之后发出通知的回调  onCharacteristicChanged
+     * 读取动作:3   21 24 12 15 15 20 11 17   18 21 00
+     * 操作数据成功
+     */
     private void acceptTime() {
         if (!isConnect) return;
         mBluetoothLeService.readCharacteristic(BluetoolGattAttributes.FFF0, BluetoolGattAttributes.FFF1);
@@ -223,7 +228,9 @@ public class MyBLEConnectActivity extends AppCompatActivity {
                 String data = intent.getStringExtra(BluetoothService.EXTRA_DATA);
                 String type = intent.getStringExtra(BluetoothService.EXTRA_TYPE);
                 if (TextUtils.isEmpty(data) || TextUtils.isEmpty(type)) return;
-                displayData(type, data);
+                String[] split = data.split(" ");
+                if (split == null || split.length == 0) return;
+                displayData(type, split);
             } else if (BluetoothService.ACTION_DATA_FAILED.equals(action)) {
                 PrintUtil.printCZ("操作数据失败");
                 String type = intent.getStringExtra(BluetoothService.EXTRA_TYPE);
@@ -245,19 +252,18 @@ public class MyBLEConnectActivity extends AppCompatActivity {
         }
     }
 
-    //30 47 15 00 16 11 17
-    private void displayData(String type, String data) {
+    private void displayData(String type, String[] data) {
         if (BluetoolGattAttributes.FFE1.equals(type)) {
             //  时间读取/设置
-            if (data.length() == 14) {
+            if (data.length == 7) {
                 try {
-                    int year = Integer.parseInt("20" + data.substring(12, 14));
-                    int month = Integer.parseInt(data.substring(10, 12)) - 1;
-                    int day = Integer.parseInt(data.substring(8, 10));
-                    int week = Integer.parseInt(data.substring(6, 8));
-                    int hour = Integer.parseInt(data.substring(4, 6));
-                    int minute = Integer.parseInt(data.substring(2, 4));
-                    int second = Integer.parseInt(data.substring(0, 2));
+                    int year = Integer.parseInt("20" + data[6]);
+                    int month = Integer.parseInt(data[5]) - 1;
+                    int day = Integer.parseInt(data[4]);
+                    int week = Integer.parseInt(data[3]);
+                    int hour = Integer.parseInt(data[2]);
+                    int minute = Integer.parseInt(data[1]);
+                    int second = Integer.parseInt(data[0]);
                     PrintUtil.print("year:" + year + " month:" + month + " day:" + day + " week:" + week + " hour:" + hour + " minute:" + minute + " second:" + second);
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(year, month, day, hour, minute, second);
@@ -267,40 +273,22 @@ public class MyBLEConnectActivity extends AppCompatActivity {
                 }
             }
         } else if (BluetoolGattAttributes.FFE2.equals(type)) {
-            //  设置提醒
-            if (data.length() == 14) {
-                try {
-                    int year = Integer.parseInt("20" + data.substring(12, 14));
-                    int month = Integer.parseInt(data.substring(10, 12)) - 1;
-                    int day = Integer.parseInt(data.substring(8, 10));
-                    int week = Integer.parseInt(data.substring(6, 8));
-                    int hour = Integer.parseInt(data.substring(4, 6));
-                    int minute = Integer.parseInt(data.substring(2, 4));
-                    int second = Integer.parseInt(data.substring(0, 2));
-                    PrintUtil.print("year:" + year + " month:" + month + " day:" + day + " week:" + week + " hour:" + hour + " minute:" + minute + " second:" + second);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(year, month, day, hour, minute, second);
-                    tvInfo.setText("设置提醒成功:" + calendar.getTime());
-                } catch (NumberFormatException e) {
-                    PrintUtil.print("显示时间失败:" + e.toString());
-                }
-            }
-        } else if (BluetoolGattAttributes.FFE3.equals(type)) {
-            tvInfo.setText("测试最大长度成功:" + data);
+            //  设置提醒  11 13 48 17 50
+            tvInfo.setText("设置提醒成功");
         } else if (BluetoolGattAttributes.FFF1.equals(type)) {
             //  动作数据
-            if (data.length() == 22) {
+            if (data.length == 10) {
                 try {
-                    int weight = Integer.parseInt(data.substring(18, 22));
-                    int temperature = Integer.parseInt(data.substring(16, 18));
-                    int year = Integer.parseInt("20" + data.substring(14, 16));
-                    int month = Integer.parseInt(data.substring(12, 14)) - 1;
-                    int day = Integer.parseInt(data.substring(10, 12));
-                    int week = Integer.parseInt(data.substring(8, 10));
-                    int hour = Integer.parseInt(data.substring(6, 8));
-                    int minute = Integer.parseInt(data.substring(4, 6));
-                    int second = Integer.parseInt(data.substring(2, 4));
-                    int action = Integer.parseInt(data.substring(0, 2));
+                    int weight = Integer.parseInt(data[9]);
+                    int temperature = Integer.parseInt(data[8]);
+                    int year = Integer.parseInt("20" + data[7]);
+                    int month = Integer.parseInt(data[6]) - 1;
+                    int day = Integer.parseInt(data[5]);
+                    int week = Integer.parseInt(data[4]);
+                    int hour = Integer.parseInt(data[3]);
+                    int minute = Integer.parseInt(data[2]);
+                    int second = Integer.parseInt(data[1]);
+                    int action = Integer.parseInt(data[0]);
                     PrintUtil.print("year:" + year + " month:" + month + " day:" + day + " week:" + week + " hour:" + hour + " minute:" + minute + " second:" + second);
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(year, month, day, hour, minute, second);

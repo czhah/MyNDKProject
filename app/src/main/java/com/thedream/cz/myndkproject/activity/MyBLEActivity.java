@@ -21,6 +21,9 @@ import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.bluetool.BluetoolGattAttributes;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyBLEActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 101;
@@ -31,6 +34,7 @@ public class MyBLEActivity extends AppCompatActivity {
     private Handler mHandler;
     private boolean mScanning = false;
     private TextView tvDevice;
+    private List<String> addressList = new ArrayList<>();
 
 
     @Override
@@ -147,11 +151,16 @@ public class MyBLEActivity extends AppCompatActivity {
         String name = device.getName();
         String address = device.getAddress();
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(address)) return;
-        if (name.toLowerCase().contains("ihk") && BluetoothAdapter.checkBluetoothAddress(address)) {
+        if (name.toLowerCase().contains("ihk-1509988") && BluetoothAdapter.checkBluetoothAddress(address)) {
             searchDevice(false);
             mDeviceAddress = device.getAddress();
             tvDevice.setText("我的设备:" + name + "  " + address);
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        searchDevice(false);
+    }
 }
