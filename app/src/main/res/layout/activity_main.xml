@@ -7,10 +7,17 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/btn_09"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="09低功耗蓝牙" />
+
+    <Button
         android:id="@+id/btn_08"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="08蓝牙4.0" />
+        android:text="08传统蓝牙"
+        app:layout_constraintTop_toBottomOf="@id/btn_09" />
 
     <Button
         android:id="@+id/btn_07"

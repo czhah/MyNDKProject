@@ -14,6 +14,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
 
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
     <application
         android:name=".base.MyApplication"
         android:allowBackup="true"
@@ -22,13 +26,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".base.WelcomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.AutoPlayActivity" />
         <activity android:name=".activity.VideoCompoundActivity" />
         <activity android:name=".activity.CustomImgAvtivity" />
@@ -36,8 +41,15 @@
         <activity android:name=".activity.SideDeleteActivity" />
         <activity android:name=".activity.MySkinActivity" />
         <activity android:name=".activity.MyLinkListActivity" />
-        <activity android:name=".activity.BLEActivity"></activity>
+        <activity android:name=".activity.MyBluetoothActivity" />
         <activity android:name=".activity.MyConstraintLayout" />
+        <activity android:name=".activity.MyBLEActivity" />
+
+        <service
+            android:name=".bluetool.BluetoothService"
+            android:enabled="true" />
+
+        <activity android:name=".activity.MyBLEConnectActivity"></activity>
     </application>
 
 </manifest>

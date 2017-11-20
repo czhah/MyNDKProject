@@ -2,16 +2,12 @@ package com.thedream.cz.myndkproject.activity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.ParcelUuid;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,8 +19,7 @@ import com.thedream.cz.myndkproject.utils.BLUUtil;
 
 import java.util.Set;
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class BLEActivity extends AppCompatActivity implements View.OnClickListener {
+public class MyBluetoothActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final int REQUEST_OPEN_BLE = 1;
 
@@ -39,7 +34,6 @@ public class BLEActivity extends AppCompatActivity implements View.OnClickListen
     private boolean bluEnable = false;
     private String mMyAddress = "";
     private String mOtherAddress = "";
-    private BluetoothDevice huaweiDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +58,20 @@ public class BLEActivity extends AppCompatActivity implements View.OnClickListen
         btnStop.setOnClickListener(this);
         btnConn.setOnClickListener(this);
 
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
+//        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (bluetoothAdapter == null) {
+//            finish();
+//            return;
+//        }
 
-        if (bluetoothAdapter == null) {
-            finish();
-            return;
-        }
-        if (bluetoothAdapter.isEnabled()) {
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            btnBle.setText("打开蓝牙");
+            btnBle.setEnabled(true);
+        } else {
             btnBle.setText("蓝牙已开启");
             btnBle.setEnabled(false);
             showMyAddress();
-        } else {
-            btnBle.setText("打开蓝牙");
-            btnBle.setEnabled(true);
         }
         bluEnable = true;
 
@@ -135,8 +129,6 @@ public class BLEActivity extends AppCompatActivity implements View.OnClickListen
                 openBLE();
                 break;
             case R.id.btn_search:
-//                if (PermissionUtil.checkLocalPermission(BLEActivity.this)) {
-//                }
                 searchDevice(true);
                 break;
             case R.id.btn_stop:
@@ -290,11 +282,8 @@ public class BLEActivity extends AppCompatActivity implements View.OnClickListen
         mOtherAddress = device.getAddress();
         //  蓝牙连接状态 1、BOND_NONE没有连接 2、BOND_BONDING连接中 3、BOND_BONDED已连接
         int bondState = device.getBondState();
-        //  uuid
-        ParcelUuid[] uuids = device.getUuids();
         //  蓝牙类型 1、DEVICE_TYPE_LE低功耗 2、DEVICE_TYPE_DUAL双模式  3、DEVICE_TYPE_CLASSIC传统模式
-        int type = device.getType(); // type:1
-        Log.i("cz", "第一次查找成功并显示查找信息 name:" + name + " address:" + mOtherAddress + " bondState:" + bondState + " type:" + type);
+        Log.i("cz", "第一次查找成功并显示查找信息 name:" + name + " address:" + mOtherAddress + " bondState:" + bondState);
         tvOtherDevice.setText("待连接设备: " + name + " " + mOtherAddress);
     }
 

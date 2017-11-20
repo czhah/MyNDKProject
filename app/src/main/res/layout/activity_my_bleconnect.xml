@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thedream.cz.myndkproject.activity.MyBLEConnectActivity">
+
+    <TextView
+        android:id="@+id/tv_device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我的设备:" />
+
+    <Button
+        android:id="@+id/btn_connection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_device"
+        android:text="连接" />
+
+    <Button
+        android:id="@+id/btn_disconnection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_connection"
+        app:layout_constraintTop_toBottomOf="@id/tv_device"
+        android:text="断开连接"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_connection"
+        android:text="连接信息:" />
+
+    <Button
+        android:id="@+id/btn_time_r"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="时间查询"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/tv_info" />
+
+    <Button
+        android:id="@+id/btn_time_w"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="时间写入"
+        android:enabled="false"
+        app:layout_constraintLeft_toRightOf="@id/btn_time_r"
+        app:layout_constraintTop_toBottomOf="@id/tv_info" />
+
+    <Button
+        android:id="@+id/btn_time_t"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="时间提醒"
+        android:enabled="false"
+        app:layout_constraintLeft_toRightOf="@id/btn_time_w"
+        app:layout_constraintTop_toBottomOf="@id/tv_info" />
+
+    <Button
+        android:id="@+id/btn_time_n"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="通知提醒"
+        android:enabled="false"
+        app:layout_constraintLeft_toRightOf="@id/btn_time_t"
+        app:layout_constraintTop_toBottomOf="@id/tv_info" />
+
+    <Button
+        android:id="@+id/btn_time_a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="接受信息"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/btn_time_n" />
+
+    <EditText
+        android:id="@+id/et_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLength="100"
+        app:layout_constraintTop_toBottomOf="@id/btn_time_t" />
+
+</android.support.constraint.ConstraintLayout>

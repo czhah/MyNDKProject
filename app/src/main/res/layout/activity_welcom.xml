@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thedream.cz.myndkproject.activity.MyLinkedListActivity">
+    tools:context="com.thedream.cz.myndkproject.base.WelcomActivity">
 
-    <Button
-        android:id="@+id/btn_link"
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="单向链表" />
+        android:text="主人太懒，什么都没有留下...." />
 </android.support.constraint.ConstraintLayout>
