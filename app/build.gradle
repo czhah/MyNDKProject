@@ -21,6 +21,10 @@ android {
                 abiFilters 'armeabi'
             }
         }
+        //  支持java 8
+        jackOptions {
+            enabled true
+        }
     }
     buildTypes {
         release {
@@ -32,6 +36,13 @@ android {
         cmake {
             path "CMakeLists.txt"
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude 'META-INF/compiler_main.kotlin_module'
     }
 }
 
@@ -49,4 +60,13 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.jakewharton:butterknife:5.1.1'
+    //  lifecycles
+    compile 'android.arch.lifecycle:runtime:1.0.3'
+    compile 'android.arch.lifecycle:compiler:1.0.0'
+    //  LiveData和ViewModel
+    compile 'android.arch.lifecycle:extensions:1.0.0'
+    //  room数据库
+    compile 'android.arch.persistence.room:runtime:1.0.0'
+    compile 'android.arch.persistence.room:compiler:1.0.0'
 }

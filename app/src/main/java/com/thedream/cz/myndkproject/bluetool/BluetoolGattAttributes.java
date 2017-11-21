@@ -15,7 +15,7 @@ public class BluetoolGattAttributes {
     public static final String FFE1 = "0000ffe1-0000-1000-8000-00805f9b34fb";
     //  时间设置(设置提醒，设置提醒时间给设备)
     public static final String FFE2 = "0000ffe2-0000-1000-8000-00805f9b34fb";
-    //  没有任何处理
+    //  获取当前连接速率 0：低速。1：高速
     public static final String FFE3 = "0000ffe3-0000-1000-8000-00805f9b34fb";
 
     //  动作服务
@@ -30,6 +30,8 @@ public class BluetoolGattAttributes {
 
     //  固件升级
     public static final String FFC0_OAD_SERVICE_UUID = "f000ffc0-0451-4000-b000-000000000000";
+    public static final String FFC1_OAD_IMAGE_NOTIFY_UUID = "f000ffc1-0451-4000-b000-000000000000";
+    public static final String FFC2_OAD_IMAGE_BLOCK_REQUEST_UUID = "f000ffc2-0451-4000-b000-000000000000";
 
 
     public static final String FF00 = "00001800-0000-1000-8000-00805f9b34fb";

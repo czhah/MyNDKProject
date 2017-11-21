@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +38,8 @@ public class MyBLEConnectActivity extends AppCompatActivity {
     private Button btnRTime;
     private Button btnWTime;
     private Button btnTTime;
+    private Button btnNTime;
+    private Button btnATime;
 
     private BluetoothService mBluetoothLeService;
     private String mDeviceAddress;
@@ -64,9 +65,6 @@ public class MyBLEConnectActivity extends AppCompatActivity {
             mBluetoothLeService = null;
         }
     };
-    private EditText etText;
-    private Button btnNTime;
-    private Button btnATime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,6 @@ public class MyBLEConnectActivity extends AppCompatActivity {
 
         tvDevice = (TextView) findViewById(R.id.tv_device);
         tvInfo = (TextView) findViewById(R.id.tv_info);
-        etText = (EditText) findViewById(R.id.et_text);
         btnConnection = (Button) findViewById(R.id.btn_connection);
         btnConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,18 +108,19 @@ public class MyBLEConnectActivity extends AppCompatActivity {
                 remindTime();
             }
         });
-        btnATime = (Button) findViewById(R.id.btn_time_a);
-        btnATime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                acceptTime();
-            }
-        });
+
         btnNTime = (Button) findViewById(R.id.btn_time_n);
         btnNTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notifyTime();
+            }
+        });
+        btnATime = (Button) findViewById(R.id.btn_time_u);
+        btnATime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateTime();
             }
         });
 
@@ -197,13 +195,11 @@ public class MyBLEConnectActivity extends AppCompatActivity {
     }
 
     /**
-     * 远程设备特征改变之后发出通知的回调  onCharacteristicChanged
-     * 读取动作:3   21 24 12 15 15 20 11 17   18 21 00
-     * 操作数据成功
+     * 固件升级
      */
-    private void acceptTime() {
+    private void updateTime() {
         if (!isConnect) return;
-        mBluetoothLeService.readCharacteristic(BluetoolGattAttributes.FFF0, BluetoolGattAttributes.FFF1);
+        mBluetoothLeService.readCharacteristic(BluetoolGattAttributes.FFE0, BluetoolGattAttributes.FFE3);
     }
 
 
@@ -275,6 +271,11 @@ public class MyBLEConnectActivity extends AppCompatActivity {
         } else if (BluetoolGattAttributes.FFE2.equals(type)) {
             //  设置提醒  11 13 48 17 50
             tvInfo.setText("设置提醒成功");
+        } else if (BluetoolGattAttributes.FFE3.equals(type)) {
+            if (data.length == 1) {
+                PrintUtil.printCZ("是否是高速模式" + data[0]);
+                tvInfo.setText(("0".equals(data[0])) ? "当前连接处于低速模式" : "当前连接处于高速模式");
+            }
         } else if (BluetoolGattAttributes.FFF1.equals(type)) {
             //  动作数据
             if (data.length == 10) {

@@ -200,10 +200,10 @@ public class BluetoothService extends Service {
                 intent.putExtra(EXTRA_TYPE, uuid);
             }
         } else if (BluetoolGattAttributes.FFE3.equals(uuid)) {
-            //  时间读取
+            //  速率读取
             String str = dispatchData(characteristic.getValue(), false);
             if (str != null) {
-                PrintUtil.printCZ("没有任何处理:" + str);
+                PrintUtil.printCZ("速率读取或写入:" + str);
                 intent.putExtra(EXTRA_DATA, str);
                 intent.putExtra(EXTRA_TYPE, uuid);
             }
