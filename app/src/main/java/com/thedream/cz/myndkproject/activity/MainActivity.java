@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.thedream.cz.myndkproject.R;
+import com.thedream.cz.myndkproject.ui.GuideActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +16,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_10).setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, GuideActivity.class));
+        });
         findViewById(R.id.btn_09).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

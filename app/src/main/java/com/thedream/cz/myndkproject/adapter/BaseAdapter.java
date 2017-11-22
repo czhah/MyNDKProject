@@ -17,7 +17,7 @@ public abstract class BaseAdapter<E, T extends RecyclerView.ViewHolder> extends 
     protected Context mContext;
 
     public BaseAdapter(Context context) {
-        this.mContext = context;
+        this.mContext = context.getApplicationContext();
     }
 
     @Override

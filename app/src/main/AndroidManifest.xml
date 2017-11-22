@@ -49,7 +49,8 @@
             android:name=".bluetool.BluetoothService"
             android:enabled="true" />
 
-        <activity android:name=".activity.MyBLEConnectActivity"></activity>
+        <activity android:name=".activity.MyBLEConnectActivity" />
+        <activity android:name=".ui.GuideActivity"></activity>
     </application>
 
 </manifest>

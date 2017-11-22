@@ -7,10 +7,17 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/btn_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="10使用MVVM架构" />
+
+    <Button
         android:id="@+id/btn_09"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="09低功耗蓝牙" />
+        android:text="09低功耗蓝牙"
+        app:layout_constraintTop_toBottomOf="@id/btn_10" />
 
     <Button
         android:id="@+id/btn_08"
