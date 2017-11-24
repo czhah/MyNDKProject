@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview.recyclerview;
+package com.thedream.cz.myndkproject.widget.recyclerview;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

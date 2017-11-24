@@ -4,6 +4,8 @@ import com.thedream.cz.myndkproject.bean.MyInfo;
 
 import java.util.Random;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -22,11 +24,13 @@ public class MyModule {
     }
 
     @Provides
+    @Singleton
     int provideId() {
         return id;
     }
 
     @Provides
+    @Singleton
     String provideName() {
         return name;
     }

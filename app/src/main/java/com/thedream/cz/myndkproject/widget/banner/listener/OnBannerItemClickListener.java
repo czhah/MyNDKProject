@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview.banner.listener;
+package com.thedream.cz.myndkproject.widget.banner.listener;
 
 import android.view.View;
 

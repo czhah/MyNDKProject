@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.thedream.cz.myndkproject.customview.banner.view.BannerViewPager
+    <com.thedream.cz.myndkproject.widget.banner.view.BannerViewPager
         android:id="@+id/vp_banner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

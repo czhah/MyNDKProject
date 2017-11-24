@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.thedream.cz.myndkproject.R;
-import com.thedream.cz.myndkproject.customview.recyclerview.ItemTouchHelperAdapterCallback;
+import com.thedream.cz.myndkproject.widget.recyclerview.ItemTouchHelperAdapterCallback;
 
 /**
  * Created by chenzhuang on 2017/10/24.

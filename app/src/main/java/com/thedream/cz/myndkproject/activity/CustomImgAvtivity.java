@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.thedream.cz.myndkproject.R;
-import com.thedream.cz.myndkproject.customview.banner.view.CircleImageView;
+import com.thedream.cz.myndkproject.widget.banner.view.CircleImageView;
 
 public class CustomImgAvtivity extends AppCompatActivity {
 

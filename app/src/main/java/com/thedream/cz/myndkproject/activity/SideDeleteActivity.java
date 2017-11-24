@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.adapter.SideDeleteAdapter;
-import com.thedream.cz.myndkproject.customview.recyclerview.LinearItemDecoration;
+import com.thedream.cz.myndkproject.widget.recyclerview.LinearItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;

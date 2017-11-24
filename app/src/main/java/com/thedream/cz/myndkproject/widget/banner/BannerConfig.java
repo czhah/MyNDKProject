@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview.banner;
+package com.thedream.cz.myndkproject.widget.banner;
 
 /**
  * Created by chenzhuang on 2017/10/19.

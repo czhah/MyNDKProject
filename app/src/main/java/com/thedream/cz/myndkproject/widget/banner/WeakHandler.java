@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview.banner;
+package com.thedream.cz.myndkproject.widget.banner;
 
 import android.os.Handler;
 import android.os.Looper;

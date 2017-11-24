@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.thedream.cz.myndkproject.R;
-import com.thedream.cz.myndkproject.customview.banner.Banner;
+import com.thedream.cz.myndkproject.widget.banner.Banner;
 
 import java.util.ArrayList;
 import java.util.List;

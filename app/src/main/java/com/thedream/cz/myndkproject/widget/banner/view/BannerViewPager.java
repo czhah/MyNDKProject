@@ -1,11 +1,11 @@
-package com.thedream.cz.myndkproject.customview.banner.view;
+package com.thedream.cz.myndkproject.widget.banner.view;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.thedream.cz.myndkproject.customview.banner.BannerConfig;
+import com.thedream.cz.myndkproject.widget.banner.BannerConfig;
 
 /**
  * Created by chenzhuang on 2017/10/19.

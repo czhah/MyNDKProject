@@ -6,7 +6,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 
 import com.thedream.cz.myndkproject.adapter.SideDeleteAdapter;
-import com.thedream.cz.myndkproject.customview.recyclerview.ItemTouchHelperAdapterCallback;
+import com.thedream.cz.myndkproject.widget.recyclerview.ItemTouchHelperAdapterCallback;
 
 /**
  * Created by chenzhuang on 2017/10/24.

@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview;
+package com.thedream.cz.myndkproject.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

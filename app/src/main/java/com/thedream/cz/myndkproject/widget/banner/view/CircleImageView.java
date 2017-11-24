@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview.banner.view;
+package com.thedream.cz.myndkproject.widget.banner.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

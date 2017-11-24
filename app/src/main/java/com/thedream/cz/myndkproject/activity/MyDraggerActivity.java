@@ -27,12 +27,6 @@ public class MyDraggerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dragger);
 //
-//        MainComponent mainComponent = DaggerMainComponent.builder().appComponent(((MyApplication) getApplication()).getComponent())
-//                .activityModule(new ActivityModule(this))
-//                .mainModule(new MainModule())
-//                .build();
-//        mainComponent.inject(this);
-
         SideInfoCompoent sideInfoCompoent = DaggerSideInfoCompoent.builder().myModule(new MyModule(-1, "测试")).build();
         sideInfoCompoent.inject(this);
 

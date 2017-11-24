@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview.recyclerview;
+package com.thedream.cz.myndkproject.widget.recyclerview;
 
 /**
  * Created by chenzhuang on 2017/10/24.

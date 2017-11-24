@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.customview.banner;
+package com.thedream.cz.myndkproject.widget.banner;
 
 import android.content.Context;
 import android.view.animation.Interpolator;

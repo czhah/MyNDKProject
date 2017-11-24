@@ -19,14 +19,14 @@
         android:required="true" />
 
     <application
-        android:name=".base.MyApplication"
+        android:name=".ui.common.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".base.WelcomActivity">
+        <activity android:name=".ui.common.FirstActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,7 +51,8 @@
 
         <activity android:name=".activity.MyBLEConnectActivity" />
         <activity android:name=".ui.GuideActivity" />
-        <activity android:name=".activity.MyDraggerActivity"></activity>
+        <activity android:name=".activity.MyDraggerActivity" />
+        <activity android:name=".base.WelcomActivity"></activity>
     </application>
 
 </manifest>
