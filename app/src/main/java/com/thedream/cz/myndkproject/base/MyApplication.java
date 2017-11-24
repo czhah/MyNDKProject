@@ -15,6 +15,7 @@ import com.thedream.cz.myndkproject.db.AppDatabase;
 public class MyApplication extends Application {
 
     private AppExecutors appExecutors;
+    private AppComponent component;
 
     @Override
     public void onCreate() {
@@ -39,6 +40,13 @@ public class MyApplication extends Application {
         });
 
         appExecutors = new AppExecutors();
+
+        component = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+
+    }
+
+    public AppComponent getComponent() {
+        return component;
     }
 
     public AppExecutors getAppExecutors() {

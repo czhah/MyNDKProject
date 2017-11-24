@@ -16,6 +16,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_11).setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, MyDraggerActivity.class));
+        });
         findViewById(R.id.btn_10).setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, GuideActivity.class));
         });

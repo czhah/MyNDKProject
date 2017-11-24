@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/11/22.
  */
-@Database(entities = {ProductEntity.class}, version = 1)
+@Database(entities = {ProductEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase sInstance;
@@ -63,7 +63,6 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase appDatabase = AppDatabase.getInstance(applicationContext, executors);
                             List<ProductEntity> productEntities = DataGenerator.generateProducts();
                             insertData(appDatabase, productEntities);
-                            appDatabase.setDatabaseCreated();
                         });
                     }
                 }).build();

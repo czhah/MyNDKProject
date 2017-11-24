@@ -4,9 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.thedream.cz.myndkproject.base.MyApplication;
 import com.thedream.cz.myndkproject.common.DataRepository;
@@ -31,14 +29,14 @@ public class ProductListViewModel extends AndroidViewModel {
         mObservableProducts = new MediatorLiveData<>();
         mObservableProducts.setValue(null);
         repository = ((MyApplication) application).getDataRepository();
-        LiveData<List<ProductEntity>> products = repository.getProducts();
-        mObservableProducts.addSource(products, new Observer<List<ProductEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<ProductEntity> productEntities) {
-                PrintUtil.printCZ("添加更改监听");
-                mObservableProducts.setValue(productEntities);
-            }
-        });
+//        LiveData<List<ProductEntity>> products = repository.getProducts();
+//        mObservableProducts.addSource(products, new Observer<List<ProductEntity>>() {
+//            @Override
+//            public void onChanged(@Nullable List<ProductEntity> productEntities) {
+//                PrintUtil.printCZ("添加更改监听");
+//                mObservableProducts.setValue(productEntities);
+//            }
+//        });
     }
 
     public LiveData<List<ProductEntity>> getmObservableProducts() {
