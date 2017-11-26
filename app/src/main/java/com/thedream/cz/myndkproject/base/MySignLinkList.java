@@ -23,13 +23,7 @@ public class MySignLinkList<E> {
     }
 
     public void add(int index, E e) {
-        if (index < 0 || index >= size) return;
-        if (index == size) {
-            linkLast(e);
-        } else {
-            //  有问题！！！
-            linkBefore(e, node(index));
-        }
+        linkBefore(index, e);
     }
 
     public E get(int index) {
@@ -77,18 +71,23 @@ public class MySignLinkList<E> {
         if (first == null) {
             first = newNode;
         } else {
-            Node<E> f = first;
-            while (f.next != null)
-                f = f.next;
-            f.next = newNode;
+            node(size - 1).next = newNode;
         }
         size++;
     }
 
-    private void linkBefore(E e, Node<E> node) {
-        final Node<E> newNode = new Node<>(e, node);
-        Node<E> prev = prev(node);
-        prev.next = newNode;
+    private void linkBefore(int index, E e) {
+        if (index < 0 || index > size - 1) return;
+        if (index == 0) {
+            final Node<E> temp = first;
+            final Node<E> newNode = new Node<>(e, temp);
+            first = newNode;
+        } else {
+            Node<E> prev = node(index - 1);
+            Node<E> cur = node(index);
+            Node<E> newNode = new Node<>(e, cur);
+            prev.next = newNode;
+        }
         size++;
     }
 
@@ -97,6 +96,42 @@ public class MySignLinkList<E> {
         for (int i = 0; i < index; i++)
             node = node.next;
         return node;
+    }
+
+    /**
+     * 反序
+     */
+    public void reverNodes() {
+        // 方法一
+//        Node<E> newNode = null;
+//        Node<E> temp = first;
+//        while(temp != null){
+//            final Node<E> next = temp.next;
+//            temp.next = newNode;
+//            newNode = temp;
+//            temp = next;
+//        }
+//        first = newNode;
+
+        // 方法二
+        revers(first);
+    }
+
+
+    /**
+     * 递归
+     */
+    private Node<E> temp = null;
+
+    public void revers(Node<E> node) {
+        if (node != null) {
+            final Node<E> next = node.next;
+            node.next = temp;
+            temp = node;
+            revers(next);
+        } else {
+            first = temp;
+        }
     }
 
     /**

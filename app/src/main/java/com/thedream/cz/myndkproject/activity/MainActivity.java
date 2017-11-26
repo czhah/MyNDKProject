@@ -1,3 +1,4 @@
+
 package com.thedream.cz.myndkproject.activity;
 
 import android.content.Intent;
@@ -16,34 +17,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.btn_11).setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, MyDraggerActivity.class));
-        });
-        findViewById(R.id.btn_10).setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, GuideActivity.class));
-        });
-        findViewById(R.id.btn_09).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MyBLEActivity.class));
-            }
-        });
+        findViewById(R.id.btn_11).setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, MyDraggerActivity.class))
+        );
+        findViewById(R.id.btn_10).setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, GuideActivity.class))
+        );
+        findViewById(R.id.btn_09).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, MyBLEActivity.class))
+        );
 
-        findViewById(R.id.btn_08).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("cz", "低版本不支持haha:" + Build.VERSION.SDK_INT);
-                startActivity(new Intent(MainActivity.this, MyBluetoothActivity.class));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                }
+        findViewById(R.id.btn_08).setOnClickListener(v -> {
+            Log.i("cz", "低版本不支持haha:" + Build.VERSION.SDK_INT);
+            startActivity(new Intent(MainActivity.this, MyBluetoothActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             }
         });
-        findViewById(R.id.btn_07).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, MyLinkListActivity.class));
-            }
-        });
+        findViewById(R.id.btn_07).setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, MyLinkListActivity.class)));
         findViewById(R.id.btn_06).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

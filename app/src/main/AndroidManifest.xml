@@ -44,6 +44,7 @@
         <activity android:name=".activity.MyBluetoothActivity" />
         <activity android:name=".activity.MyConstraintLayout" />
         <activity android:name=".activity.MyBLEActivity" />
+        <activity android:name=".activity.MyLinkedListActivity" />
 
         <service
             android:name=".bluetool.BluetoothService"

@@ -41,7 +41,7 @@ public class MyApplication extends Application {
 
         appExecutors = new AppExecutors();
 
-        component = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+//        component = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
 
     }
 

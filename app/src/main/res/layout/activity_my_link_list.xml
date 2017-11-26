@@ -20,4 +20,11 @@
         android:text="双向链表"
         app:layout_constraintTop_toBottomOf="@id/btn_single_link" />
 
+    <Button
+        android:id="@+id/btn_tree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="二叉树"
+        app:layout_constraintTop_toBottomOf="@id/btn_double_link" />
+
 </android.support.constraint.ConstraintLayout>
