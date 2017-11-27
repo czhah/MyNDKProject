@@ -6,8 +6,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 
-import com.thedream.cz.myndkproject.base.MyApplication;
-import com.thedream.cz.myndkproject.common.DataRepository;
 import com.thedream.cz.myndkproject.db.entity.ProductEntity;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
@@ -20,15 +18,12 @@ import java.util.List;
 public class ProductListViewModel extends AndroidViewModel {
 
     private final MediatorLiveData<List<ProductEntity>> mObservableProducts;
-    //  管理数据库类
-    private final DataRepository repository;
 
     public ProductListViewModel(@NonNull Application application) {
         super(application);
         PrintUtil.printCZ("执行了ProductListViewModel的构造方法");
         mObservableProducts = new MediatorLiveData<>();
         mObservableProducts.setValue(null);
-        repository = ((MyApplication) application).getDataRepository();
 //        LiveData<List<ProductEntity>> products = repository.getProducts();
 //        mObservableProducts.addSource(products, new Observer<List<ProductEntity>>() {
 //            @Override
@@ -44,7 +39,6 @@ public class ProductListViewModel extends AndroidViewModel {
     }
 
     public void loadMore() {
-        repository.loadMore();
     }
 
 

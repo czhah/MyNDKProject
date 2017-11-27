@@ -10,15 +10,15 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Created by chenzhuang on 2017/10/23.
  * Describe:
  */
 
-public class CircleImageView extends ImageView {
+public class CircleImageView extends AppCompatImageView {
 
     private boolean isCircle = true;
     private float mWidth;
