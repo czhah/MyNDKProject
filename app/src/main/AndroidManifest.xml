@@ -54,7 +54,8 @@
         <activity android:name=".ui.GuideActivity" />
         <activity android:name=".activity.MyDraggerActivity" />
         <activity android:name=".base.WelcomActivity" />
-        <activity android:name=".ui.activity.user.login.UserLoginActivity"></activity>
+        <activity android:name=".ui.activity.user.login.UserLoginActivity" />
+        <activity android:name=".activity.MyRoomActivity"></activity>
     </application>
 
 </manifest>

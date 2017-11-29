@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_13).setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, UserLoginActivity.class))
+        );
         findViewById(R.id.btn_12).setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, UserLoginActivity.class))
         );

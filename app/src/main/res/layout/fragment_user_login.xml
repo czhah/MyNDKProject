@@ -25,4 +25,20 @@
         android:text="登录"
         app:layout_constraintTop_toBottomOf="@id/et_pwd" />
 
+    <Button
+        android:id="@+id/btn_query"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询"
+        app:layout_constraintTop_toBottomOf="@id/et_pwd"
+        app:layout_constraintLeft_toRightOf="@id/btn_login" />
+
+    <Button
+        android:id="@+id/btn_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询所有"
+        app:layout_constraintTop_toBottomOf="@id/et_pwd"
+        app:layout_constraintLeft_toRightOf="@id/btn_query" />
+
 </android.support.constraint.ConstraintLayout>

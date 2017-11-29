@@ -5,6 +5,11 @@ package com.thedream.cz.myndkproject.bean;
  */
 
 public class WebResultInfo<T> {
+
+    public static final int RESULT_SUCCESS = 1;
+
+    public static final int RESULT_FAILED = -1;
+
     private int statusCode;
     private String message;
     private T data;

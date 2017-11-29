@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.thedream.cz.myndkproject.R;
+import com.thedream.cz.myndkproject.ui.common.BaseApplication;
 import com.thedream.cz.myndkproject.ui.common.BaseFragment;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
@@ -43,13 +44,20 @@ public class UserLoginFragment extends BaseFragment<UserLoginContract.Presenter>
             String pwd = etPwd.getText().toString();
             mPresenter.login(name, pwd);
         });
+        view.findViewById(R.id.btn_query).setOnClickListener((v) -> {
+            mPresenter.query();
+        });
+        view.findViewById(R.id.btn_all).setOnClickListener((v) -> {
+            mPresenter.queryList();
+        });
     }
 
     @Override
     public void setPresenter(UserLoginContract.Presenter presenter) {
         if (null == presenter) {
-            mPresenter = new UserLoginPresenter(this);
+            mPresenter = new UserLoginPresenter(this, ((BaseApplication) BaseApplication.mApplication).getCommonDataRepository());
         }
+
     }
 
     @Override
@@ -69,12 +77,21 @@ public class UserLoginFragment extends BaseFragment<UserLoginContract.Presenter>
     public void onResult(String result) {
         PrintUtil.printCZ("result：" + result);
         ToastUtil.showToast(getContext(), "登录成功！");
-        getActivity().finish();
     }
 
     @Override
     public void onError(int code) {
         ToastUtil.showToast(getContext(), "登录错误:" + code);
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
+    public void showTip(String text) {
+        ToastUtil.showToast(getContext(), text);
     }
 
 }

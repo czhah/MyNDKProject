@@ -14,4 +14,5 @@ public class AppConstant {
 
     //  网络请求缓存大小 10M
     public static final long NETWORK_CACHE_SIZE = 10 * 1024 * 1024;
+
 }
