@@ -8,7 +8,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * Created by Administrator on 2017/11/22.
+ * Created by cz on 2017/11/22.
+ * 处理
  */
 
 public class AppExecutors {

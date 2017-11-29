@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.ui.GuideActivity;
+import com.thedream.cz.myndkproject.ui.activity.user.login.UserLoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_12).setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, UserLoginActivity.class))
+        );
         findViewById(R.id.btn_11).setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, MyDraggerActivity.class))
         );

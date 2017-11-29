@@ -7,10 +7,17 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/btn_12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="12测试Retrofit" />
+
+    <Button
         android:id="@+id/btn_11"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="11使用dragger" />
+        android:text="11使用dragger"
+        app:layout_constraintTop_toBottomOf="@id/btn_12" />
 
     <Button
         android:id="@+id/btn_10"

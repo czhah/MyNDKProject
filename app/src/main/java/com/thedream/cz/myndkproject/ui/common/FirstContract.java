@@ -1,7 +1,8 @@
 package com.thedream.cz.myndkproject.ui.common;
 
-import com.thedream.cz.myndkproject.ui.base.IBasePresenter;
-import com.thedream.cz.myndkproject.ui.base.IBaseView;
+
+import com.thedream.cz.myndkproject.IBasePresenter;
+import com.thedream.cz.myndkproject.IBaseView;
 
 /**
  * Created by cz on 2017/11/27.
@@ -12,13 +13,6 @@ public interface FirstContract {
 
     interface View extends IBaseView<Presenter> {
 
-        void launchMain();
-
-        void launchSetting();
-
-        void finishActivity();
-
-        void showMissingPermissionDialog();
 
     }
 

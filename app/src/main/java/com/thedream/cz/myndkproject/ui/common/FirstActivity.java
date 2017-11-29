@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirstActivity extends BaseActivity<FirstContract.Presenter> implements FirstContract.View {
+public class FirstActivity extends BaseActivity {
 
     static final int REQUEST_LOCATION = 100;
 
@@ -46,13 +46,6 @@ public class FirstActivity extends BaseActivity<FirstContract.Presenter> impleme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
-    }
-
-    @Override
-    public void setPresenter(FirstContract.Presenter presenter) {
-        if (null == presenter) {
-            this.mPresenter = new FirstPresenter(this);
-        }
     }
 
     @Override
@@ -90,32 +83,24 @@ public class FirstActivity extends BaseActivity<FirstContract.Presenter> impleme
         mHandler.sendEmptyMessageDelayed(0, 3000);
     }
 
-    @Override
     public void launchMain() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
-    @Override
     public void launchSetting() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + getPackageName()));
         startActivity(intent);
     }
 
-    @Override
-    public void finishActivity() {
-        this.finish();
-    }
-
-    @Override
     public void showMissingPermissionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提醒");
         builder.setMessage("去打开权限");
         // 拒绝, 退出应用
         builder.setNegativeButton("取消", (dialog, which) -> {
-            finishActivity();
+            FirstActivity.this.finish();
         });
         builder.setPositiveButton("设置", (dialog, which) -> {
             launchSetting();

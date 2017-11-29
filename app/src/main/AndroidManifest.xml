@@ -53,7 +53,8 @@
         <activity android:name=".activity.MyBLEConnectActivity" />
         <activity android:name=".ui.GuideActivity" />
         <activity android:name=".activity.MyDraggerActivity" />
-        <activity android:name=".base.WelcomActivity"></activity>
+        <activity android:name=".base.WelcomActivity" />
+        <activity android:name=".ui.activity.user.login.UserLoginActivity"></activity>
     </application>
 
 </manifest>
