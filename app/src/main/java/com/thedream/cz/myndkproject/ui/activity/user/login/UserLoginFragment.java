@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.thedream.cz.myndkproject.R;
+import com.thedream.cz.myndkproject.ui.activity.find.content.FindActivity;
 import com.thedream.cz.myndkproject.ui.common.BaseApplication;
 import com.thedream.cz.myndkproject.ui.common.BaseFragment;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
@@ -77,6 +78,7 @@ public class UserLoginFragment extends BaseFragment<UserLoginContract.Presenter>
     public void onResult(String result) {
         PrintUtil.printCZ("result：" + result);
         ToastUtil.showToast(getContext(), "登录成功！");
+        FindActivity.launch(getContext());
     }
 
     @Override

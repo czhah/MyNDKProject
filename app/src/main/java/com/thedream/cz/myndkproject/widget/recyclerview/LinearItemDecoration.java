@@ -45,5 +45,6 @@ public class LinearItemDecoration extends RecyclerView.ItemDecoration {
                 c.drawRect(left, top, right, bottom, paint);
             }
         }
+
     }
 }

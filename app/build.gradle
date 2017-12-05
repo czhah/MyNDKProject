@@ -86,6 +86,7 @@ dependencies {
     compile 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
