@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.thedream.cz.myndkproject.R;
+import com.thedream.cz.myndkproject.bean.ShellSort;
 import com.thedream.cz.myndkproject.bean.Tree;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
@@ -38,6 +39,19 @@ public class MyLinkListActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btn_tree).setOnClickListener(v -> tree());
+        findViewById(R.id.btn_shell).setOnClickListener(v -> shellSort());
+    }
+
+    private void shellSort() {
+        int maxSize = 10;
+        ShellSort shellSort = new ShellSort(maxSize);
+
+        for (int j = 0; j < maxSize; j++) {
+            shellSort.insert((long) (Math.random() * 99));
+        }
+        shellSort.diplay();
+        shellSort.shellSort();
+        shellSort.diplay();
     }
 
     private void tree() {

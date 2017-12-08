@@ -1,5 +1,6 @@
 package com.thedream.cz.myndkproject.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.view.NestedScrollingParent;
@@ -9,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -27,6 +29,7 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
     private ImageView ivBanner;
     private int mHeadHeight;
     private RecyclerView mRecyclerView;
+    private ValueAnimator mOffsetAnimator;
 
     public ScrollLayout(Context context) {
         this(context, null);
@@ -43,6 +46,8 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
                 .getScaledMaximumFlingVelocity();
         mMinimumVelocity = ViewConfiguration.get(context)
                 .getScaledMinimumFlingVelocity();
+        //  16000
+        PrintUtil.printCZ("mMaximumVelocity：" + mMaximumVelocity + " mMinimumVelocity:" + mMinimumVelocity);
 
     }
 
@@ -56,7 +61,7 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        getChildAt(0).measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.AT_MOST));
+        //  这样处理才可以
         ViewGroup.LayoutParams params = mRecyclerView.getLayoutParams();
         params.height = getMeasuredHeight();
         setMeasuredDimension(getMeasuredWidth(), ivBanner.getMeasuredHeight() + mRecyclerView.getMeasuredHeight());
@@ -74,16 +79,10 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
         return true;
     }
 
-    int totalY = 0;
-
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        //
-        totalY += dy;
-        PrintUtil.printCZ("totalY :" + totalY + "  dy:" + dy + "  getScrollY():" + getScrollY());
         boolean hideHead = dy > 0 && getScrollY() < mHeadHeight;
         boolean showHead = dy < 0 && getScrollY() > 0 && !ViewCompat.canScrollVertically(target, -1);
-
         if (hideHead || showHead) {
             scrollBy(0, dy);
             consumed[1] = dy;
@@ -96,12 +95,100 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
 
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        PrintUtil.printCZ("onNestedPreFling  velocityY:" + velocityY);
+        return false;
+
+    }
+
+    @Override
+    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+        boolean showHead = false;
+        if (target instanceof RecyclerView && velocityY < -mMinimumVelocity * 15) {
+            //  这里判断第一个View离Adapter距离不远，则向下拉动时显示Banner图
+            final RecyclerView recyclerView = (RecyclerView) target;
+            final View firstChild = recyclerView.getChildAt(0);
+            final int childAdapterPosition = recyclerView.getChildAdapterPosition(firstChild);
+            showHead = childAdapterPosition != -1 && childAdapterPosition < 3;
+        }
+        boolean hideHead = velocityY > mMinimumVelocity * 5 && getScrollY() < mHeadHeight;
+        if (showHead || hideHead) {
+            int duration = computeDuration(velocityY);
+            int endY = velocityY > 0 ? mHeadHeight : 0;
+            animateScroll(duration, endY);
+            return true;
+        }
+
         return false;
     }
 
-    private void startAnimator(int startY, int endY, float velocityY) {
+    /**
+     * 根据速度计算滚动动画持续时间
+     *
+     * @param velocityY
+     * @return
+     */
+    private int computeDuration(float velocityY) {
+        final int duration;
+        final int distance;
+        if (velocityY > 0) {
+            distance = Math.abs(mHeadHeight - getScrollY());
+            duration = 3 * Math.round(1000 * (distance / velocityY));
+        } else {
+            distance = Math.abs(getScrollY());
+            final float distanceRatio = (float) distance / getHeight();
+            duration = (int) ((distanceRatio + 1) * 150);
+        }
+        return duration;
 
+    }
+
+    private void animateScroll(final int duration, int endY) {
+        final int currentOffset = getScrollY();
+        if (mOffsetAnimator == null) {
+            mOffsetAnimator = new ValueAnimator();
+            mOffsetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mOffsetAnimator.addUpdateListener(animation -> {
+                if (animation.getAnimatedValue() instanceof Integer) {
+                    int value = (Integer) animation.getAnimatedValue();
+                    scrollTo(0, value);
+                }
+            });
+        } else {
+            mOffsetAnimator.cancel();
+        }
+        mOffsetAnimator.setDuration(Math.min(duration, 600));
+        mOffsetAnimator.setIntValues(currentOffset, endY);
+        mOffsetAnimator.start();
+    }
+
+    private void animateScroll(float velocityY, final int duration, boolean consumed) {
+        final int currentOffset = getScrollY();
+        if (mOffsetAnimator == null) {
+            mOffsetAnimator = new ValueAnimator();
+            mOffsetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mOffsetAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    if (animation.getAnimatedValue() instanceof Integer) {
+                        scrollTo(0, (Integer) animation.getAnimatedValue());
+                    }
+                }
+            });
+        } else {
+            mOffsetAnimator.cancel();
+        }
+        mOffsetAnimator.setDuration(Math.min(duration, 600));
+
+        if (velocityY >= 0) {
+            mOffsetAnimator.setIntValues(currentOffset, mHeadHeight);
+            mOffsetAnimator.start();
+        } else {
+            //如果子View没有消耗down事件 那么就让自身滑倒0位置
+            if (!consumed) {
+                mOffsetAnimator.setIntValues(currentOffset, 0);
+                mOffsetAnimator.start();
+            }
+
+        }
     }
 
     @Override
