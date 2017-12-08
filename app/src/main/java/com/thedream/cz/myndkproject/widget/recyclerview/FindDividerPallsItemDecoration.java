@@ -8,7 +8,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.thedream.cz.myndkproject.ui.adapter.StaggeredGridAdapter;
-import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.WindowUtil;
 
 /**
@@ -48,10 +47,16 @@ public class FindDividerPallsItemDecoration extends RecyclerView.ItemDecoration 
 //        }
         RecyclerView.Adapter adapter = parent.getAdapter();
         if (adapter instanceof StaggeredGridAdapter) {
-            boolean isLeft = ((StaggeredGridAdapter) adapter).isLeft(itemPosition);
-            boolean isTop = itemPosition < spanCount;
-            boolean isBottom = itemPosition >= (itemCount - spanCount);
-            outRect.set(isLeft ? 0 : divier, isTop ? 0 : divier, isLeft ? divier : 0, isBottom ? 0 : divier);
+            if (adapter.getItemViewType(itemPosition) == StaggeredGridAdapter.DEFAULT_TYPE) {
+
+                int realPosition = ((StaggeredGridAdapter) adapter).getRealPosition(itemPosition);
+                boolean isLeft = ((StaggeredGridAdapter) adapter).isLeft(realPosition);
+                boolean isTop = realPosition < spanCount;
+                boolean isBottom = itemPosition > (itemCount - spanCount);
+                outRect.set(isLeft ? 0 : divier, isTop ? 0 : divier, isLeft ? divier : 0, isBottom ? 0 : divier);
+            } else {
+                outRect.set(0, 0, 0, 0);
+            }
         } else {
             outRect.set(divier, divier, divier, divier);
         }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +27,13 @@ import java.util.Map;
  * 瀑布流
  */
 
-public class StaggeredGridAdapter extends RecyclerView.Adapter<StaggeredGridAdapter.MyHandler> {
+public class StaggeredGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int ITEM_DECORATION = 2;
+
+    public static final int HEAD_TYPE = 0x00000111;
+    private static final int FOOT_TYPE = 0x00000222;
+    public static final int DEFAULT_TYPE = 0x00000333;
 
     private List<FindInfo> data = new ArrayList<>();
     private Map<Integer, Integer> heightList = new HashMap<Integer, Integer>();
@@ -39,6 +44,8 @@ public class StaggeredGridAdapter extends RecyclerView.Adapter<StaggeredGridAdap
     private final int[] colorArr = {Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.RED};
     private final int viewWidth;
     private final int decoration;
+    private View mHeadView;
+    private View mFootView;
 
     public StaggeredGridAdapter(Context context, int spanCount) {
         this.mContext = context;
@@ -101,25 +108,76 @@ public class StaggeredGridAdapter extends RecyclerView.Adapter<StaggeredGridAdap
         }
     }
 
-    @Override
-    public MyHandler onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_find_layout, parent, false);
-        return new MyHandler(view);
+    public void setHeadView(View headView) {
+        this.mHeadView = headView;
+    }
+
+    public boolean hasHead() {
+        return mHeadView != null;
+    }
+
+    public int getHeadSize() {
+        return hasHead() ? 1 : 0;
     }
 
     @Override
-    public void onBindViewHolder(MyHandler holder, int position) {
-        ViewGroup.LayoutParams params = holder.tvText.getLayoutParams();
-        params.width = viewWidth;
-        params.height = heightList.get(position);
-        holder.tvText.setLayoutParams(params);
-        holder.tvText.setText(data.get(position).getText());
-        holder.tvText.setBackgroundColor(colorArr[position % colorArr.length]);
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        PrintUtil.printCZ("adapterPosition: " + holder.getAdapterPosition() + "  layoutPosition: " + holder.getLayoutPosition());
+        int type = holder.getItemViewType();
+        if (type == HEAD_TYPE) {
+            setFullSpan(holder);
+        }
+    }
+
+    private void setFullSpan(RecyclerView.ViewHolder holder) {
+        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+        if (layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
+            ((StaggeredGridLayoutManager.LayoutParams) layoutParams).setFullSpan(true);
+        }
+    }
+
+    public int getRealPosition(int position) {
+        return position - getHeadSize();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0 && hasHead()) {
+            return HEAD_TYPE;
+        }
+        return DEFAULT_TYPE;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == HEAD_TYPE) {
+            return new HeadHolder(mHeadView);
+        } else {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_find_layout, parent, false);
+            return new MyHandler(view);
+        }
+
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == HEAD_TYPE) {
+
+        } else {
+            MyHandler myHolder = (MyHandler) holder;
+            ViewGroup.LayoutParams params = myHolder.tvText.getLayoutParams();
+            params.width = viewWidth;
+            params.height = heightList.get(getRealPosition(position));
+            myHolder.tvText.setLayoutParams(params);
+            myHolder.tvText.setText(data.get(getRealPosition(position)).getText());
+            myHolder.tvText.setBackgroundColor(colorArr[getRealPosition(position) % colorArr.length]);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return data == null ? 0 : data.size();
+        return getHeadSize() + (data == null ? 0 : data.size());
     }
 
     static class MyHandler extends RecyclerView.ViewHolder {
@@ -129,6 +187,13 @@ public class StaggeredGridAdapter extends RecyclerView.Adapter<StaggeredGridAdap
         public MyHandler(View itemView) {
             super(itemView);
             tvText = (TextView) itemView.findViewById(R.id.tv_find_text);
+        }
+    }
+
+    static class HeadHolder extends RecyclerView.ViewHolder {
+
+        public HeadHolder(View itemView) {
+            super(itemView);
         }
     }
 }
