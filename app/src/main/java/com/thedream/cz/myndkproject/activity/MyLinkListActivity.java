@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.thedream.cz.myndkproject.R;
+import com.thedream.cz.myndkproject.bean.QuickSort;
 import com.thedream.cz.myndkproject.bean.ShellSort;
 import com.thedream.cz.myndkproject.bean.Tree;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
@@ -40,6 +41,20 @@ public class MyLinkListActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_tree).setOnClickListener(v -> tree());
         findViewById(R.id.btn_shell).setOnClickListener(v -> shellSort());
+        findViewById(R.id.btn_quick).setOnClickListener(view -> quickSort());
+    }
+
+    private void quickSort() {
+        int maxSize = 16;
+        QuickSort sort = new QuickSort(maxSize);
+
+        for (int j = 0; j < maxSize; j++) {
+            sort.insert((long) (Math.random() * 99));
+        }
+
+        sort.diplay();
+        sort.quickSort();
+        sort.diplay();
     }
 
     private void shellSort() {
@@ -66,8 +81,14 @@ public class MyLinkListActivity extends AppCompatActivity {
         tree.insert(30, 2.0);
         tree.insert(33, 2.2);
         tree.insert(87, 1.4);
-        tree.insert(93, 1.1);
-        tree.insert(97, 1.0);
+        tree.insert(77, 1.1);
+        tree.insert(97, 1.8);
+        tree.insert(85, 0.9);
+        tree.insert(100, 2.3);
+
+        tree.inOrder();
+
+        PrintUtil.printCZ("删除值:" + tree.delete(75));
 
         tree.inOrder();
 

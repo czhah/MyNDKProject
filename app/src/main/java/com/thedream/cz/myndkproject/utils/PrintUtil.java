@@ -19,6 +19,10 @@ public class PrintUtil {
         if (SWITCH_LOG) Log.d(TAG, text);
     }
 
+    public static void printE(String text) {
+        if (SWITCH_LOG) Log.e(TAG, text);
+    }
+
     public static void print(Object text) {
         if (SWITCH_LOG) Log.d(TAG, text != null ? text.toString() : "null");
     }

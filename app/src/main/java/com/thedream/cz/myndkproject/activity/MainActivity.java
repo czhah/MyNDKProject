@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_09).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, MyBLEActivity.class))
         );
-
         findViewById(R.id.btn_08).setOnClickListener(v -> {
             Log.i("cz", "低版本不支持haha:" + Build.VERSION.SDK_INT);
             startActivity(new Intent(MainActivity.this, MyBluetoothActivity.class));

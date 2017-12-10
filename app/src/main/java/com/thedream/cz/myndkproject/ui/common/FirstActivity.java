@@ -74,7 +74,7 @@ public class FirstActivity extends BaseActivity {
                                 int.class});
                         method.invoke(this, array, REQUEST_LOCATION);
                         return;
-                    }//Expected receiver of type android.content.ContextWrapper, but got com.thedream.cz.myndkproject.mvp.presenter.FirstPresenter
+                    }
                 } catch (Exception e) {
                     PrintUtil.print("检查权限出错:" + e.toString());
                 }

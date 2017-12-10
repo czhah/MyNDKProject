@@ -34,4 +34,10 @@
         android:text="希尔排序"
         app:layout_constraintTop_toBottomOf="@id/btn_tree" />
 
+    <Button
+        android:id="@+id/btn_quick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="快速排序"
+        app:layout_constraintTop_toBottomOf="@id/btn_shell" />
 </android.support.constraint.ConstraintLayout>

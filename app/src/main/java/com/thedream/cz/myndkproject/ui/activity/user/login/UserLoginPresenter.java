@@ -25,6 +25,27 @@ public class UserLoginPresenter implements UserLoginContract.Presenter {
         this.mRepository = repository;
     }
 
+    private final OnResultListener listener = new OnResultListener<LoginInfo>() {
+        @Override
+        public void onSuccess(LoginInfo loginInfo) {
+            if (!mView.isActive()) return;
+            mView.showProgress(false);
+            if (loginInfo != null) {
+                uid = loginInfo.getUid();
+                mView.onResult(loginInfo.toString());
+            } else {
+                mView.showTip("数据为空");
+            }
+        }
+
+        @Override
+        public void onFailed(int code) {
+            if (!mView.isActive()) return;
+            mView.showProgress(false);
+            mView.onError(code);
+        }
+    };
+
     @Override
     public void login(String name, String pwd) {
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(pwd)) {
@@ -70,25 +91,4 @@ public class UserLoginPresenter implements UserLoginContract.Presenter {
         });
     }
 
-    private final OnResultListener listener = new OnResultListener<LoginInfo>() {
-
-        @Override
-        public void onSuccess(LoginInfo loginInfo) {
-            if (!mView.isActive()) return;
-            mView.showProgress(false);
-            if (loginInfo != null) {
-                uid = loginInfo.getUid();
-                mView.onResult(loginInfo.toString());
-            } else {
-                mView.showTip("数据为空");
-            }
-        }
-
-        @Override
-        public void onFailed(int code) {
-            if (!mView.isActive()) return;
-            mView.showProgress(false);
-            mView.onError(code);
-        }
-    };
 }

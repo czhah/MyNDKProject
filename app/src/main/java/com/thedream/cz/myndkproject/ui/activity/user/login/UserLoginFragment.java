@@ -20,7 +20,6 @@ import com.thedream.cz.myndkproject.utils.ToastUtil;
  */
 public class UserLoginFragment extends BaseFragment<UserLoginContract.Presenter> implements UserLoginContract.View {
 
-
     private EditText etName;
     private EditText etPwd;
     private ProgressDialog mProgress;

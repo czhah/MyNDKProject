@@ -56,8 +56,8 @@ public class Tree {
         return null;
     }
 
-    public void delete(int key) {
-        if (rootNode == null) return;
+    public boolean delete(int key) {
+        if (rootNode == null) return false;
         Node parent = rootNode;
         Node cur = rootNode;
         boolean isLeft = true;
@@ -79,13 +79,13 @@ public class Tree {
 
         if (!hasKey) {
             PrintUtil.printCZ("没有找到");
-            return;
+            return false;
         }
         if (cur.leftNode == null && cur.rightNode == null) {
             //  没有子节点
             if (cur == rootNode) {
                 rootNode = null;
-                return;
+                return true;
             }
             if (isLeft) {
                 parent.leftNode = null;
@@ -97,7 +97,7 @@ public class Tree {
             if (cur == rootNode) {
                 rootNode = rootNode.leftNode;
                 rootNode.leftNode = null;
-                return;
+                return true;
             }
             if (isLeft) {
                 parent.leftNode = cur.leftNode;
@@ -109,7 +109,7 @@ public class Tree {
             if (cur == rootNode) {
                 rootNode = rootNode.rightNode;
                 rootNode.rightNode = null;
-                return;
+                return true;
             }
             if (isLeft) {
                 parent.leftNode = cur.rightNode;
@@ -118,32 +118,59 @@ public class Tree {
             }
         } else {
             //  有两个节点
+//            if (cur == rootNode) {
+//                //  这里断掉根节点好难判断啊!!!
+//                Node left = rootNode.leftNode;
+//                Node right = rootNode.rightNode;
+//                if (left.leftNode == null && left.rightNode == null) {
+//                    rootNode = left;
+//                    rootNode.rightNode = right;
+//                    return;
+//                } else if (left.rightNode == null) {
+//                    rootNode = left;
+//                    rootNode.rightNode = right;
+//                    return;
+//                } else if (left.leftNode == null) {
+//                    Node rrNode = left.rightNode;
+//                    rootNode = left;
+//                    rootNode.rightNode = right;
+//                    //  获取
+//                }
+//
+//
+//                return;
+//            }
+
+            Node successor = getSuccessor(cur);
+
             if (cur == rootNode) {
-                //  这里断掉根节点好难判断啊!!!
-                Node left = rootNode.leftNode;
-                Node right = rootNode.rightNode;
-                if (left.leftNode == null && left.rightNode == null) {
-                    rootNode = left;
-                    rootNode.rightNode = right;
-                    return;
-                } else if (left.rightNode == null) {
-                    rootNode = left;
-                    rootNode.rightNode = right;
-                    return;
-                } else if (left.leftNode == null) {
-                    Node rrNode = left.rightNode;
-                    rootNode = left;
-                    rootNode.rightNode = right;
-                    //  获取
-                }
-
-
-                return;
+                rootNode = successor;
+            } else if (isLeft) {
+                parent.leftNode = successor;
+            } else {
+                parent.rightNode = successor;
             }
 
+            successor.leftNode = cur.leftNode;
+        }
+        return true;
+    }
 
+    private Node getSuccessor(Node delNode) {
+        Node successorParent = delNode;
+        Node successor = delNode;
+        Node current = delNode.rightNode;
+        while (current != null) {
+            successorParent = successor;
+            successor = current;
+            current = current.leftNode;
         }
 
+        if (successor != delNode.rightNode) {
+            successorParent.leftNode = successor.rightNode;
+            successor.rightNode = delNode.rightNode;
+        }
+        return successor;
     }
 
     public void preOrder() {
