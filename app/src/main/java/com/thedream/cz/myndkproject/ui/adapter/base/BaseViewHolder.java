@@ -7,6 +7,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,6 +84,15 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     public BaseViewHolder setVisible(@IdRes int viewId, boolean visible) {
         View view = getView(viewId);
         view.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        return this;
+    }
+
+    public BaseViewHolder setWidthAndHeight(@IdRes int viewId, int width, int height) {
+        View view = getView(viewId);
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        params.width = width;
+        params.height = height;
+        view.setLayoutParams(params);
         return this;
     }
 

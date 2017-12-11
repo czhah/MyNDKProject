@@ -1,7 +1,8 @@
 package com.thedream.cz.myndkproject.ui.adapter.base;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -31,39 +32,69 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     public static final int CONTENT_VIEW = 0x00000444;
     public static final int EMPTY_VIEW = 0x00000555;
 
+    protected static final int START_REFRESH = 0;
+
     private Context mContext;
     protected List<T> mData;
 
-    //header footer
+    //  header footer
     private LinearLayout mHeaderLayout;
     private LinearLayout mFooterLayout;
-    //empty
+    //  empty
     private FrameLayout mEmptyLayout;
+    //  加载更多
+    private LoadMoreView mLoadMoreView = new SimpleLoadMoreView();
+    //  是否显示空页面
+    private boolean mIsUseEmpty = false;
+    //  是否允许加载更多
+    private boolean mLoadMoreEnable = false;
+    //  是否正在加载
+    private boolean mLoading = false;
+    //  预加载下标
+    private int mPreLoadNumber = 1;
 
-    private boolean mHeadAndEmptyEnable;
-    private boolean mFootAndEmptyEnable;
+    //  加载更多监听
+    private OnLoadMoreListener onLoadMoreListener;
+    //  GridLayoutManager分布
+    private SpanSizeLookup mSpanSizeLookup;
+    private LayoutInflater mLayoutInflater;
 
-    protected void refreshData(List<T> list) {
+    protected abstract @LayoutRes int getLayoutResId();
+
+    protected abstract void convert(K holder, T info);
+
+    public void refreshData(List<T> list) {
+        refreshData(list, true);
+    }
+
+    public void refreshData(List<T> list, boolean refresh) {
         this.mData = list == null ? new ArrayList<T>() : list;
-        notifyDataSetChanged();
+        if(refresh) notifyDataChanged(START_REFRESH);
     }
 
-    protected void loadMore(List<T> list) {
+    public void loadMore(List<T> list) {
+        loadMore(list, true);
+    }
+
+    public void loadMore(List<T> list, boolean refresh) {
         if (list == null) return;
+        final int start = this.mData.size();
         this.mData.addAll(list);
-        notifyDataSetChanged();
+        if(refresh) notifyDataChanged(start);
     }
 
-    protected abstract
-    @IdRes
-    int getLayoutResId();
+    protected void notifyDataChanged(int start) {
+        for(; start < mData.size(); start++) {
+            notifyItemChanged(getHeaderLayoutCount() + start);
+        }
+    }
 
-    protected abstract void convert(K holder, T item);
 
     @Override
     public void onViewAttachedToWindow(K holder) {
         super.onViewAttachedToWindow(holder);
-        if (holder.getItemViewType() == HEADER_VIEW) {
+        int type = holder.getItemViewType();
+        if (isFixedViewType(type)) {
             setFullSpan(holder);
         }
     }
@@ -76,11 +107,36 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     }
 
     @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
+        if(manager instanceof GridLayoutManager) {
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) manager;
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    int type = getItemViewType(position);
+                    if (isFixedViewType(type)){
+                        return gridLayoutManager.getSpanCount();
+                    }else {
+                        return mSpanSizeLookup == null ? 1 : mSpanSizeLookup.getSpanSize(gridLayoutManager, position);
+                    }
+                }
+            });
+        }
+    }
+
+    protected boolean isFixedViewType(int type) {
+        return type == EMPTY_VIEW || type == HEADER_VIEW || type == FOOTER_VIEW || type ==
+                LOADING_VIEW;
+    }
+
+    @Override
     public int getItemViewType(int position) {
         //  判断没有数据 且包含空布局
         if (getEmptyViewCount() == 1) {
             //  如果包含头布局
-            boolean header = mHeadAndEmptyEnable && getHeaderLayoutCount() != 0;
+            boolean header = /*mHeadAndEmptyEnable && */getHeaderLayoutCount() != 0;
             switch (position) {
                 case 0:
                     if (header) {
@@ -113,9 +169,8 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         } else {
             //  获取数据的下标(除开头布局)
             int adjPosition = position - numHeaders;
-            int adapterCount = mData.size();
+            int adapterCount = getDataSize();
             if (adjPosition < adapterCount) {
-                //  返回数据的类型  这里应该用position吧，使用adjPosition去掉了numHeaders
                 return getDefItemViewType(adjPosition);
             } else {
                 //  count = getHeaderLayoutCount() + mData.size() + getFooterLayoutCount() + getLoadMoreViewCount();
@@ -131,15 +186,19 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         }
     }
 
-    private int getDefItemViewType(int position) {
+    protected int getDefItemViewType(int position) {
         return CONTENT_VIEW;
+}
+
+    private int getDataSize() {
+        return mData == null ? 0 : mData.size();
     }
 
     @Override
     public K onCreateViewHolder(ViewGroup parent, int viewType) {
         K baseViewHolder = null;
         mContext = parent.getContext();
-        LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
+        mLayoutInflater = LayoutInflater.from(mContext);
         switch (viewType) {
             case HEADER_VIEW:
                 baseViewHolder = createBaseViewHolder(mHeaderLayout);
@@ -151,20 +210,48 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
                 baseViewHolder = createBaseViewHolder(mFooterLayout);
                 break;
             case LOADING_VIEW:
-                //  TODO 底部加载布局
-                baseViewHolder = createBaseViewHolder(mFooterLayout);
+                baseViewHolder = createLoadingHolder(parent);
                 break;
             case CONTENT_VIEW:
             default:
-                baseViewHolder = createBaseViewHolder(getItemView(mLayoutInflater, getLayoutResId(), parent));
+                baseViewHolder = createDefViewHolder(parent, viewType);
                 break;
         }
         baseViewHolder.setAdapter(this);
         return baseViewHolder;
     }
 
-    private View getItemView(LayoutInflater layoutInflater, int layoutResId, ViewGroup parent) {
-        return layoutInflater.inflate(layoutResId, parent, false);
+    protected K createDefViewHolder(ViewGroup parent, int type) {
+        return createBaseViewHolder(parent, getLayoutResId());
+    }
+
+    private K createLoadingHolder(ViewGroup parent) {
+        K holder = createBaseViewHolder(parent, mLoadMoreView.getLoadLayoutId());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_FAIL) {
+                    notifyLoadMoreLoading();
+                }
+            }
+        });
+        return holder;
+    }
+
+    private void notifyLoadMoreLoading() {
+        if(mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_LOADING) {
+            return ;
+        }
+        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
+        notifyDataChanged(getLoadMoreViewPosition());
+    }
+
+    protected View getItemView(@LayoutRes int layoutResId, ViewGroup parent) {
+        return mLayoutInflater.inflate(layoutResId, parent, false);
+    }
+
+    protected K createBaseViewHolder(ViewGroup parent, int layoutResId) {
+        return createBaseViewHolder(getItemView(layoutResId, parent));
     }
 
     /**
@@ -253,6 +340,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             case LOADING_VIEW:
+                mLoadMoreView.convert(holder);
                 break;
             case HEADER_VIEW:
                 break;
@@ -263,7 +351,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             case CONTENT_VIEW:
                 //  内容
             default:
-                convert(holder, getItem(getRealPos(position)));
+                convert(holder, mData.get(getRealPos(position)));
                 break;
         }
     }
@@ -274,10 +362,23 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     }
 
     private void autoLoadMore(int position) {
-
+        if(getLoadMoreViewCount() == 0) {
+            return ;
+        }
+        if(position < getItemCount() - mPreLoadNumber) {
+            return ;
+        }
+        if(mLoadMoreView.getLoadMoreStatus() != LoadMoreView.STATUS_DEFAULT){
+            return ;
+        }
+        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_LOADING);
+        if(!mLoading) {
+            mLoading = true;
+            onLoadMoreListener.onLoadMore();
+        }
     }
 
-    protected int getRealPos(int position) {
+    public int getRealPos(int position) {
         return position - getHeaderLayoutCount();
     }
 
@@ -288,39 +389,70 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             //  如果包含空布局
             count = 1;
             //  且包含头布局
-            if (mHeadAndEmptyEnable && getHeaderLayoutCount() != 0) {
+            if (getHeaderLayoutCount() != 0) {
                 count++;
             }
             //  且包含底部布局
-            if (mFootAndEmptyEnable && getFooterLayoutCount() != 0) {
+            if (getFooterLayoutCount() != 0) {
                 count++;
             }
         } else {
-            count = getHeaderLayoutCount() + mData.size() + getFooterLayoutCount() + getLoadMoreViewCount();
+            count = getHeaderLayoutCount() + getDataSize() + getFooterLayoutCount() + getLoadMoreViewCount();
         }
         return count;
     }
 
+    /******************************空背景布局**************************/
     private int getEmptyViewCount() {
-        return 0;
+        if (mEmptyLayout == null || mEmptyLayout.getChildCount() == 0) {
+            return 0;
+        }
+        if(!mIsUseEmpty) {
+            return 0;
+        }
+        if(getDataSize() > 0) {
+            return 0;
+        }
+        return 1;
     }
 
+    public void setUserEmpty(boolean userEmpty) {
+        this.mIsUseEmpty = userEmpty;
+    }
+
+    public void setEmptyView(View emptyView) {
+        boolean insert = false;
+        if(mEmptyLayout != null) {
+            mEmptyLayout = new FrameLayout(emptyView.getContext());
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ViewGroup.LayoutParams lp = emptyView.getLayoutParams();
+            if(lp != null) {
+                layoutParams.width = lp.width;
+                layoutParams.height = lp.height;
+            }
+            mEmptyLayout.setLayoutParams(layoutParams);
+            insert = true;
+        }
+        mEmptyLayout.removeAllViews();
+        mEmptyLayout.addView(emptyView);
+        mIsUseEmpty = true;
+        if(insert) {
+            if(getEmptyViewCount() == 1) {
+                int pos = 0;
+                if(getHeaderLayoutCount() != 0) {
+                    pos ++;
+                }
+                notifyItemChanged(pos);
+            }
+        }
+    }
+
+    /******************************头布局**************************/
     private int getHeaderLayoutCount() {
         if (mHeaderLayout == null || mHeaderLayout.getChildCount() == 0) {
             return 0;
         }
         return 1;
-    }
-
-    private int getFooterLayoutCount() {
-        if (mFooterLayout == null || mFooterLayout.getChildCount() == 0) {
-            return 0;
-        }
-        return 1;
-    }
-
-    private int getLoadMoreViewCount() {
-        return 0;
     }
 
     public int addHeaderView(View header) {
@@ -344,7 +476,41 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         }
         mHeaderLayout.addView(header, index);
         if (mHeaderLayout.getChildCount() == 1) {
-            int position = getHeaderViewPosition();
+            notifyItemInserted(0);
+        }
+        return index;
+    }
+
+    /******************************底部布局(感觉没什么用啊!!!!)**************************/
+    private int getFooterLayoutCount() {
+        if (mFooterLayout == null || mFooterLayout.getChildCount() == 0) {
+            return 0;
+        }
+        return 1;
+    }
+
+    public int addFooterView(View header) {
+        return addFooterView(header, -1, LinearLayout.VERTICAL);
+    }
+
+    public int addFooterView(View header, int index, int orientation) {
+        if (mFooterLayout == null) {
+            mFooterLayout = new LinearLayout(header.getContext());
+            if (orientation == LinearLayout.VERTICAL) {
+                mFooterLayout.setOrientation(LinearLayout.VERTICAL);
+                mFooterLayout.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            } else {
+                mFooterLayout.setOrientation(LinearLayout.HORIZONTAL);
+                mFooterLayout.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            }
+        }
+        final int childCount = mFooterLayout.getChildCount();
+        if (index < 0 || index > childCount) {
+            index = childCount;
+        }
+        mFooterLayout.addView(header, index);
+        if (mFooterLayout.getChildCount() == 1) {
+            int position = getFooterViewPosition();
             if (position != -1) {
                 notifyItemInserted(position);
             }
@@ -352,18 +518,76 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         return index;
     }
 
-    private int getHeaderViewPosition() {
-        //Return to header view notify position
+    private int getFooterViewPosition() {
+        //Return to footer view notify position
         if (getEmptyViewCount() == 1) {
-            if (mHeadAndEmptyEnable) {
-                return 0;
-            } else {
-                //  如果不包含空布局，则不刷新？？？
+            if (getHeaderLayoutCount() != 0) {
+                return 2;
             }
         } else {
-            return 0;
+            return getHeaderLayoutCount() + getDataSize();
         }
         return -1;
     }
 
+    /******************************加载更多布局**************************/
+    private int getLoadMoreViewCount() {
+        if(!mLoadMoreEnable || onLoadMoreListener == null) {
+            return 0;
+        }
+        if(getDataSize() == 0) {
+            return 0;
+        }
+        return 1;
+    }
+
+    public void setLoadMoreEnable(boolean loadMoreEnable) {
+        this.mLoadMoreEnable = loadMoreEnable;
+    }
+
+    public int getLoadMoreViewPosition() {
+        return getHeaderLayoutCount() + getDataSize() + getFooterLayoutCount();
+    }
+
+    public void loadMoreComplete() {
+        if(getLoadMoreViewCount() == 0) return ;
+        mLoading = false;
+        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
+        notifyItemChanged(getLoadMoreViewPosition());
+    }
+
+    public void loadMoreFail() {
+        if(getLoadMoreViewCount() == 0) return ;
+        mLoading = false;
+        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_FAIL);
+        notifyItemChanged(getLoadMoreViewPosition());
+    }
+
+    public void loadMoreEnd() {
+        if(getLoadMoreViewCount() == 0) return ;
+        mLoading = false;
+        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_END);
+        notifyItemChanged(getLoadMoreViewPosition());
+    }
+
+    public void setPreLoadNumber(int num) {
+        this.mPreLoadNumber = num;
+    }
+
+    /*****************************各种监听***********************************/
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        this.onLoadMoreListener = listener;
+    }
+
+    public interface SpanSizeLookup {
+        int getSpanSize(GridLayoutManager gridLayoutManager, int position);
+    }
+
+    public void setSpanSizeLookUp(SpanSizeLookup spanSizeLookUp) {
+        this.mSpanSizeLookup = spanSizeLookUp;
+    }
 }

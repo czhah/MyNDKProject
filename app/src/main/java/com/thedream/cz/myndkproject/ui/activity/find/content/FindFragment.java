@@ -10,7 +10,8 @@ import android.view.View;
 
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.data.entity.FindInfo;
-import com.thedream.cz.myndkproject.ui.adapter.StaggeredGridAdapter;
+import com.thedream.cz.myndkproject.ui.adapter.StaggeredGrid2Adapter;
+import com.thedream.cz.myndkproject.ui.adapter.base.BaseStaggeredGridAdapter;
 import com.thedream.cz.myndkproject.ui.common.BaseFragment;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
@@ -18,8 +19,6 @@ import com.thedream.cz.myndkproject.widget.ScrollLayout;
 import com.thedream.cz.myndkproject.widget.recyclerview.FindDividerPallsItemDecoration;
 
 import java.util.List;
-
-import static com.thedream.cz.myndkproject.ui.adapter.StaggeredGridAdapter.ITEM_DECORATION;
 
 /**
  * Created by cz on 2017/11/29.
@@ -29,7 +28,7 @@ import static com.thedream.cz.myndkproject.ui.adapter.StaggeredGridAdapter.ITEM_
 public class FindFragment extends BaseFragment<FindContract.Presenter> implements FindContract.View {
 
     private ProgressDialog mProgress;
-    private StaggeredGridAdapter mAdapter;
+    private StaggeredGrid2Adapter mAdapter;
     private ScrollLayout mScrollLayout;
 
     private FindFragment() {
@@ -50,14 +49,16 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
         mScrollLayout = (ScrollLayout) view.findViewById(R.id.scrollLayout);
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        mRecyclerView.addItemDecoration(new FindDividerPallsItemDecoration(getContext(), ITEM_DECORATION));
-        mRecyclerView.setAdapter(mAdapter = new StaggeredGridAdapter(getContext(), 2));
+        mRecyclerView.addItemDecoration(new FindDividerPallsItemDecoration(getContext(), BaseStaggeredGridAdapter.STAGGERED_ITEM_DECORATION));
+        mRecyclerView.setAdapter(mAdapter = new StaggeredGrid2Adapter(getContext(), 2));
         initHeadView();
     }
 
     private void initHeadView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_banner, null);
-        mAdapter.setHeadView(view);
+        mAdapter.addHeaderView(view);
+        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.view_empty_layout, null);
+        mAdapter.setEmptyView(emptyView);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
 
     @Override
     public void refresh(List<FindInfo> list) {
-        mAdapter.refresh(list);
+        mAdapter.refreshData(list);
         mScrollLayout.invalidate();
     }
 
