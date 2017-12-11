@@ -37,7 +37,7 @@ public class PresenterMvpFactoryImpl<V extends BaseMvpView, P extends BaseMvpPre
         try {
             return mPresenterClass.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Presenter创建失败！请检查是否声明了@CreatePresenter(xx.class)注解");
+            throw new RuntimeException("Presenter创建失败！请检查是否声明了@CreatePresenter(xxxPresenter.class)注解");
         }
     }
 }

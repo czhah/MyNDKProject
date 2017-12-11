@@ -26,19 +26,6 @@ public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> 
         this.mFactory = mFactory;
     }
 
-    @Override
-    public void setPresenterFactory(PresenterMvpFactory<V, P> presenterFactory) {
-        if (mPresenter != null) {
-            throw new IllegalArgumentException("这个方法只能在getMvpPresenter()之前调用，如果Presenter已经创建则不能再修改");
-        }
-        this.mFactory = presenterFactory;
-    }
-
-    @Override
-    public PresenterMvpFactory<V, P> getPresenterFactory() {
-        return mFactory;
-    }
-
     /**
      * 获取创建的Presenter
      * 如果之前创建过，而且是意外销毁则从Bundle中恢复
@@ -50,6 +37,7 @@ public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> 
         PrintUtil.printE("Proxy getMvpPresenter");
         if (mFactory != null) {
             if (mPresenter == null) {
+                PrintUtil.printE("Proxy create MvpPresenter");
                 mPresenter = mFactory.createMvpPresenter();
                 mPresenter.onCreatePresenter(mBundle == null ? null : mBundle.getBundle(PRESENTER_KEY));
             }
@@ -81,7 +69,7 @@ public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> 
     }
 
     public Bundle onSaveInstanceState() {
-        PrintUtil.printE("Proxy  onSaveInstanceState() = ");
+        PrintUtil.printE("Proxy  onSaveInstanceState() = 保存信息" + (mPresenter != null));
         Bundle bundle = new Bundle();
         getMvpPresenter();
         if (mPresenter != null) {
@@ -94,7 +82,7 @@ public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> 
     }
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        PrintUtil.printE("Proxy  onRestoreInstanceState = ");
+        PrintUtil.printE("Proxy  onRestoreInstanceState = 恢复信息" + (mPresenter != null));
         mBundle = savedInstanceState;
     }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.thedream.cz.myndkproject.mvp.factory.PresenterMvpFactory;
 import com.thedream.cz.myndkproject.mvp.factory.PresenterMvpFactoryImpl;
 import com.thedream.cz.myndkproject.mvp.presenter.BaseMvpPresenter;
 import com.thedream.cz.myndkproject.mvp.proxy.BaseMvpProxy;
@@ -26,7 +25,6 @@ public class BaseMvpActivity<V extends BaseMvpView, P extends BaseMvpPresenter<V
         if (savedInstanceState != null) {
             mProxy.onRestoreInstanceState(savedInstanceState.getBundle(PRESENTER_SAVE_KEY));
         }
-
         mProxy.onCreate((V) this);
     }
 
@@ -40,16 +38,6 @@ public class BaseMvpActivity<V extends BaseMvpView, P extends BaseMvpPresenter<V
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle(PRESENTER_SAVE_KEY, mProxy.onSaveInstanceState());
-    }
-
-    @Override
-    public void setPresenterFactory(PresenterMvpFactory<V, P> presenterFactory) {
-        mProxy.setPresenterFactory(presenterFactory);
-    }
-
-    @Override
-    public PresenterMvpFactory<V, P> getPresenterFactory() {
-        return mProxy.getPresenterFactory();
     }
 
     @Override
