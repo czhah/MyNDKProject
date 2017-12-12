@@ -1,7 +1,9 @@
-package com.thedream.cz.myndkproject.ui.adapter.base;
+package com.thedream.cz.myndkproject.ui.adapter.base.loadmore;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+
+import com.thedream.cz.myndkproject.ui.adapter.base.BaseViewHolder;
 
 /**
  * Created by cz on 2017/12/11.
@@ -67,11 +69,19 @@ public abstract class LoadMoreView {
         holder.setVisible(getLoadEndViewId(), visible);
     }
 
-    protected abstract @IdRes int getLoadFailViewId();
+    public abstract
+    @IdRes
+    int getLoadFailViewId();
 
-    protected abstract @IdRes int getLoadEndViewId();
+    public abstract
+    @IdRes
+    int getLoadEndViewId();
 
-    protected abstract @IdRes int getLoadingViewId();
+    public abstract
+    @IdRes
+    int getLoadingViewId();
 
-    protected abstract @LayoutRes int getLoadLayoutId();
+    public abstract
+    @LayoutRes
+    int getLoadLayoutId();
 }

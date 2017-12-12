@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.ui.adapter.base;
+package com.thedream.cz.myndkproject.ui.adapter.base.loadmore;
 
 import com.thedream.cz.myndkproject.R;
 
@@ -10,22 +10,22 @@ import com.thedream.cz.myndkproject.R;
 public class SimpleLoadMoreView extends LoadMoreView {
 
     @Override
-    protected int getLoadFailViewId() {
+    public int getLoadFailViewId() {
         return R.id.frame_simple_load_more_fail;
     }
 
     @Override
-    protected int getLoadEndViewId() {
+    public int getLoadEndViewId() {
         return R.id.frame_simple_load_more_end;
     }
 
     @Override
-    protected int getLoadingViewId() {
+    public int getLoadingViewId() {
         return R.id.ll_simple_load_more_loading;
     }
 
     @Override
-    protected int getLoadLayoutId() {
+    public int getLoadLayoutId() {
         return R.layout.view_simple_load_more_layout;
     }
 }

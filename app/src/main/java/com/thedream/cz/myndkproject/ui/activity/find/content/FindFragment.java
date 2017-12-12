@@ -11,6 +11,7 @@ import android.view.View;
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.data.entity.FindInfo;
 import com.thedream.cz.myndkproject.ui.adapter.StaggeredGrid2Adapter;
+import com.thedream.cz.myndkproject.ui.adapter.base.BaseQuickAdapter;
 import com.thedream.cz.myndkproject.ui.adapter.base.BaseStaggeredGridAdapter;
 import com.thedream.cz.myndkproject.ui.common.BaseFragment;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
@@ -59,6 +60,26 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
         mAdapter.addHeaderView(view);
         View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.view_empty_layout, null);
         mAdapter.setEmptyView(emptyView);
+        mAdapter.setLoadMoreEnable(true);
+        mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                mPresenter.loadMore();
+            }
+        });
+        mAdapter.setOnItemClickListener((v, position) -> {
+            FindInfo info = mAdapter.getItem(position);
+            ToastUtil.showToast(getContext(), "点击了第 " + info.getText() + " 个");
+        });
+        mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+                FindInfo info = mAdapter.getItem(position);
+                ToastUtil.showToast(getContext(), "长按了第 " + info.getText() + " 个");
+                return true;
+            }
+        });
+//        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
     }
 
     @Override
@@ -89,24 +110,28 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
     }
 
     @Override
-    public void refresh(List<FindInfo> list) {
-        mAdapter.refreshData(list);
-        mScrollLayout.invalidate();
+    public void onSuccess(boolean isRefresh, List<FindInfo> list) {
+        if (isRefresh) {
+            mAdapter.refreshData(list);
+        } else {
+            if (list != null && list.size() > 0) {
+                mAdapter.loadMoreComplete();
+                mAdapter.loadMore(list);
+            } else {
+                mAdapter.loadMoreEnd();
+            }
+        }
     }
 
     @Override
-    public void loadMore(List<FindInfo> list) {
-        mAdapter.loadMore(list);
+    public void onFail(boolean isRefresh, String msg) {
+        ToastUtil.showToast(getContext(), msg);
+        if (!isRefresh) mAdapter.loadMoreFail();
     }
 
     @Override
     public boolean isAlive() {
         return isAdded();
-    }
-
-    @Override
-    public void showTip(String text) {
-        ToastUtil.showToast(getContext(), text);
     }
 
 }

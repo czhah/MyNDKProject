@@ -1,16 +1,33 @@
 package com.thedream.cz.myndkproject.ui.adapter.base;
 
+import android.animation.Animator;
 import android.content.Context;
+import android.support.annotation.IntDef;
+import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.thedream.cz.myndkproject.ui.adapter.base.animation.AlphaInAnimation;
+import com.thedream.cz.myndkproject.ui.adapter.base.animation.BaseAnimation;
+import com.thedream.cz.myndkproject.ui.adapter.base.animation.ScaleInAnimation;
+import com.thedream.cz.myndkproject.ui.adapter.base.animation.SlideInBottomAnimation;
+import com.thedream.cz.myndkproject.ui.adapter.base.animation.SlideInLeftAnimation;
+import com.thedream.cz.myndkproject.ui.adapter.base.animation.SlideInRightAnimation;
+import com.thedream.cz.myndkproject.ui.adapter.base.loadmore.LoadMoreView;
+import com.thedream.cz.myndkproject.ui.adapter.base.loadmore.SimpleLoadMoreView;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -32,10 +49,48 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     public static final int CONTENT_VIEW = 0x00000444;
     public static final int EMPTY_VIEW = 0x00000555;
 
-    protected static final int START_REFRESH = 0;
-
     private Context mContext;
     protected List<T> mData;
+
+    /**
+     * Use with {@link #openLoadAnimation}
+     */
+    public static final int ALPHAIN = 0x00000001;
+    /**
+     * Use with {@link #openLoadAnimation}
+     */
+    public static final int SCALEIN = 0x00000002;
+    /**
+     * Use with {@link #openLoadAnimation}
+     */
+    public static final int SLIDEIN_BOTTOM = 0x00000003;
+    /**
+     * Use with {@link #openLoadAnimation}
+     */
+    public static final int SLIDEIN_LEFT = 0x00000004;
+    /**
+     * Use with {@link #openLoadAnimation}
+     */
+    public static final int SLIDEIN_RIGHT = 0x00000005;
+
+    @IntDef({ALPHAIN, SCALEIN, SLIDEIN_BOTTOM, SLIDEIN_LEFT, SLIDEIN_RIGHT})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface AnimationType {
+    }
+
+    //  是否允许动画
+    private boolean mOpenAnimationEnable = false;
+    //  动画插值器：匀速执行
+    private Interpolator mInterpolator = new LinearInterpolator();
+    //  动画时间
+    private int mDuration = 300;
+    //  上一个的下标(对瀑布流无效)
+    private int mLastPosition = -1;
+
+    //  自定义动画
+    private BaseAnimation mCustomAnimation;
+    //  显示动画
+    private BaseAnimation mSelectAnimation = new AlphaInAnimation();
 
     //  header footer
     private LinearLayout mHeaderLayout;
@@ -52,43 +107,73 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     private boolean mLoading = false;
     //  预加载下标
     private int mPreLoadNumber = 1;
+    //  是否是瀑布流(用于判断加载更多时的最后一行)
+    private boolean mIsStaggeredLayout = false;
 
     //  加载更多监听
     private OnLoadMoreListener onLoadMoreListener;
     //  GridLayoutManager分布
     private SpanSizeLookup mSpanSizeLookup;
     private LayoutInflater mLayoutInflater;
+    //  Item点击监听
+    private OnItemClickListener mOnItemClickListener;
+    //  Item长按监听
+    private OnItemLongClickListener mOnItemLongClickListener;
+    //  子View点击事件
+    private OnItemChildClickListener mOnItemChildClickListener;
+    //  子View长按事件
+    private OnItemChildLongClickListener mOnItemChildLongClickListener;
 
     protected abstract @LayoutRes int getLayoutResId();
 
     protected abstract void convert(K holder, T info);
 
+    /**
+     * 刷新页面
+     *
+     * @param list
+     */
     public void refreshData(List<T> list) {
         refreshData(list, true);
     }
 
     public void refreshData(List<T> list, boolean refresh) {
         this.mData = list == null ? new ArrayList<T>() : list;
-        if(refresh) notifyDataChanged(START_REFRESH);
+        if (refresh) notifyDataSetChanged();
     }
 
+    /**
+     * 加载更多
+     * @param list
+     */
     public void loadMore(List<T> list) {
         loadMore(list, true);
     }
 
     public void loadMore(List<T> list, boolean refresh) {
         if (list == null) return;
-        final int start = this.mData.size();
+        final int newSize = list.size();
         this.mData.addAll(list);
-        if(refresh) notifyDataChanged(start);
+        mLastPosition = -1;
+        if (refresh) notifyMoreChange(newSize);
     }
 
-    protected void notifyDataChanged(int start) {
-        for(; start < mData.size(); start++) {
-            notifyItemChanged(getHeaderLayoutCount() + start);
+    protected void notifyMoreChange(int newSize) {
+        notifyItemRangeInserted(mData.size() - newSize, newSize);
+        compatibilityDataSizeChanged(newSize);
+    }
+
+    private void compatibilityDataSizeChanged(int size) {
+        if (getDataSize() == size) {
+            notifyDataSetChanged();
         }
     }
 
+    public void addData(@IntRange(from = 0) int position, @NonNull T data) {
+        mData.add(position, data);
+        notifyItemInserted(getHeaderLayoutCount() + position);
+        compatibilityDataSizeChanged(1);
+    }
 
     @Override
     public void onViewAttachedToWindow(K holder) {
@@ -96,12 +181,19 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         int type = holder.getItemViewType();
         if (isFixedViewType(type)) {
             setFullSpan(holder);
+        } else {
+            addAnimation(holder);
         }
     }
 
+    /**
+     * 设置如果是瀑布流布局，则头布局、底部布局、加载更多布局、空页面占满一屏
+     * @param holder
+     */
     private void setFullSpan(RecyclerView.ViewHolder holder) {
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
         if (layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
+            mIsStaggeredLayout = true;
             ((StaggeredGridLayoutManager.LayoutParams) layoutParams).setFullSpan(true);
         }
     }
@@ -169,13 +261,13 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         } else {
             //  获取数据的下标(除开头布局)
             int adjPosition = position - numHeaders;
-            int adapterCount = getDataSize();
-            if (adjPosition < adapterCount) {
+            int dataSize = getDataSize();
+            if (adjPosition < dataSize) {
                 return getDefItemViewType(adjPosition);
             } else {
                 //  count = getHeaderLayoutCount() + mData.size() + getFooterLayoutCount() + getLoadMoreViewCount();
                 //  adjPosition 属于getFooterLayoutCount() + getLoadMoreViewCount();
-                adjPosition = adjPosition - adapterCount;
+                adjPosition = adjPosition - dataSize;
                 int numFooters = getFooterLayoutCount();
                 if (adjPosition < numFooters) {
                     return FOOTER_VIEW;
@@ -188,7 +280,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
 
     protected int getDefItemViewType(int position) {
         return CONTENT_VIEW;
-}
+    }
 
     private int getDataSize() {
         return mData == null ? 0 : mData.size();
@@ -215,10 +307,34 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             case CONTENT_VIEW:
             default:
                 baseViewHolder = createDefViewHolder(parent, viewType);
+                bindViewClickListener(baseViewHolder);
                 break;
         }
         baseViewHolder.setAdapter(this);
         return baseViewHolder;
+    }
+
+    private void bindViewClickListener(RecyclerView.ViewHolder holder) {
+        if (holder == null) {
+            return;
+        }
+        View view = holder.itemView;
+        if (view == null) {
+            return;
+        }
+        if (mOnItemClickListener != null) {
+            view.setOnClickListener(v ->
+                    mOnItemClickListener.onItemClick(v, holder.getLayoutPosition() - getHeaderLayoutCount())
+            );
+        }
+        if (mOnItemLongClickListener != null) {
+            view.setOnLongClickListener(v ->
+                    {
+                        return mOnItemLongClickListener.onItemLongClick(view, holder.getLayoutPosition() - getHeaderLayoutCount());
+                    }
+            );
+        }
+
     }
 
     protected K createDefViewHolder(ViewGroup parent, int type) {
@@ -243,7 +359,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             return ;
         }
         mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
-        notifyDataChanged(getLoadMoreViewPosition());
+        notifyItemChanged(getLoadMoreViewPosition());
     }
 
     protected View getItemView(@LayoutRes int layoutResId, ViewGroup parent) {
@@ -351,13 +467,13 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             case CONTENT_VIEW:
                 //  内容
             default:
-                convert(holder, mData.get(getRealPos(position)));
+                convert(holder, getItem(getRealPos(position)));
                 break;
         }
     }
 
-    protected T getItem(int position) {
-        if (position < mData.size()) return mData.get(position);
+    public T getItem(int position) {
+        if (position >= 0 && position < getDataSize()) return mData.get(position);
         return null;
     }
 
@@ -365,8 +481,16 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         if(getLoadMoreViewCount() == 0) {
             return ;
         }
-        if(position < getItemCount() - mPreLoadNumber) {
-            return ;
+        if (mIsStaggeredLayout) {
+            //  瀑布流必须滑动到最后一行时才加载更多
+            if (getItemViewType(position) != LOADING_VIEW) {
+                return;
+            }
+        } else {
+            //  对非瀑布流有效
+            if (position < getItemCount() - mPreLoadNumber) {
+                return;
+            }
         }
         if(mLoadMoreView.getLoadMoreStatus() != LoadMoreView.STATUS_DEFAULT){
             return ;
@@ -402,6 +526,63 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         return count;
     }
 
+    /***************************添加Item显示动画*********************************/
+    private void addAnimation(RecyclerView.ViewHolder holder) {
+        if (mOpenAnimationEnable) {
+            if (holder.getLayoutPosition() > mLastPosition) {
+                BaseAnimation animation = null;
+                if (mCustomAnimation != null) {
+                    animation = mCustomAnimation;
+                } else {
+                    animation = mSelectAnimation;
+                }
+                for (Animator anim : animation.getAnimators(holder.itemView)) {
+                    startAnim(anim);
+                }
+                mLastPosition = holder.getLayoutPosition();
+            }
+        }
+    }
+
+    private void startAnim(Animator anim) {
+        anim.setInterpolator(mInterpolator);
+        anim.setDuration(mDuration).start();
+    }
+
+    public void openLoadAnimation(boolean openAnimationEnable) {
+        this.mOpenAnimationEnable = openAnimationEnable;
+    }
+
+    /**
+     * Set the view animation type.
+     *
+     * @param animationType One of {@link #ALPHAIN}, {@link #SCALEIN}, {@link #SLIDEIN_BOTTOM},
+     *                      {@link #SLIDEIN_LEFT}, {@link #SLIDEIN_RIGHT}.
+     */
+    public void openLoadAnimation(@AnimationType int animationType) {
+        this.mOpenAnimationEnable = true;
+        mCustomAnimation = null;
+        switch (animationType) {
+            case ALPHAIN:
+                mSelectAnimation = new AlphaInAnimation();
+                break;
+            case SCALEIN:
+                mSelectAnimation = new ScaleInAnimation();
+                break;
+            case SLIDEIN_BOTTOM:
+                mSelectAnimation = new SlideInBottomAnimation();
+                break;
+            case SLIDEIN_LEFT:
+                mSelectAnimation = new SlideInLeftAnimation();
+                break;
+            case SLIDEIN_RIGHT:
+                mSelectAnimation = new SlideInRightAnimation();
+                break;
+            default:
+                break;
+        }
+    }
+
     /******************************空背景布局**************************/
     private int getEmptyViewCount() {
         if (mEmptyLayout == null || mEmptyLayout.getChildCount() == 0) {
@@ -422,7 +603,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
 
     public void setEmptyView(View emptyView) {
         boolean insert = false;
-        if(mEmptyLayout != null) {
+        if (mEmptyLayout == null) {
             mEmptyLayout = new FrameLayout(emptyView.getContext());
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             ViewGroup.LayoutParams lp = emptyView.getLayoutParams();
@@ -448,7 +629,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     }
 
     /******************************头布局**************************/
-    private int getHeaderLayoutCount() {
+    protected int getHeaderLayoutCount() {
         if (mHeaderLayout == null || mHeaderLayout.getChildCount() == 0) {
             return 0;
         }
@@ -590,4 +771,45 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
     public void setSpanSizeLookUp(SpanSizeLookup spanSizeLookUp) {
         this.mSpanSizeLookup = spanSizeLookUp;
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
+
+    public interface OnItemLongClickListener {
+        boolean onItemLongClick(View view, int position);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.mOnItemLongClickListener = listener;
+    }
+
+    public interface OnItemChildClickListener {
+        void onItemChildClick(View view, int position);
+    }
+
+    public void setOnItemChildClickListener(OnItemChildClickListener listener) {
+        this.mOnItemChildClickListener = listener;
+    }
+
+    public OnItemChildClickListener getOnItemChildClickListener() {
+        return mOnItemChildClickListener;
+    }
+
+    public interface OnItemChildLongClickListener {
+        boolean onItemChildLongClick(View view, int position);
+    }
+
+    public void setOnItemChildLongClickListener(OnItemChildLongClickListener listener) {
+        this.mOnItemChildLongClickListener = listener;
+    }
+
+    public OnItemChildLongClickListener getOnItemChildLongClickListener() {
+        return mOnItemChildLongClickListener;
+    }
+
 }

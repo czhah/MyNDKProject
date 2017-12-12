@@ -46,16 +46,16 @@ public abstract class BaseStaggeredGridAdapter<T, K extends BaseViewHolder> exte
     public void refreshData(List list) {
         super.refreshData(list, false);
         initHeightAndLocal();
-        notifyDataChanged(START_REFRESH);
+        notifyDataSetChanged();
     }
 
     @Override
     public void loadMore(List list) {
         if (list == null) return;
-        final int start = mData.size();
+        final int newSize = list.size();
         super.loadMore(list, false);
         initHeightAndLocal();
-        notifyDataChanged(start);
+        notifyMoreChange(newSize);
     }
 
     /**

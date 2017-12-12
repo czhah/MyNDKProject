@@ -19,6 +19,16 @@ public abstract class BaseGridMultiItemAdapter<T, K extends BaseViewHolder> exte
         return layouts.get(viewType, TYPE_NOT_FOUND);
     }
 
+    /**
+     * 这里把单个布局拦截了，使用多布局方式
+     *
+     * @return
+     */
+    @Override
+    protected int getLayoutResId() {
+        return 0;
+    }
+
     protected void addItemType(int type, @LayoutRes int layoutResId) {
         if (layouts == null) {
             layouts = new SparseIntArray();

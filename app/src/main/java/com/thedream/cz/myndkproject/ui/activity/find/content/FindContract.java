@@ -19,18 +19,18 @@ public interface FindContract {
 
         void loadMore();
 
+        void reLoad();
     }
 
     interface View extends IBaseView<Presenter> {
         void showProgress(boolean alive);
 
-        void refresh(List<FindInfo> list);
+        void onSuccess(boolean isRefresh, List<FindInfo> list);
 
-        void loadMore(List<FindInfo> list);
+        void onFail(boolean isRefresh, String msg);
 
         boolean isAlive();
 
-        void showTip(String text);
     }
 
 }
