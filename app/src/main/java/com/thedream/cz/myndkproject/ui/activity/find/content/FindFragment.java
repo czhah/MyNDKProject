@@ -1,6 +1,5 @@
 package com.thedream.cz.myndkproject.ui.activity.find.content;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +13,7 @@ import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.data.entity.FindInfo;
 import com.thedream.cz.myndkproject.ui.adapter.StaggeredGrid2Adapter;
 import com.thedream.cz.myndkproject.ui.common.BaseFragment;
+import com.thedream.cz.myndkproject.ui.dialog.LoadingDialog;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
 import com.thedream.cz.myndkproject.widget.recyclerview.FindDividerPallsItemDecoration;
@@ -27,8 +27,8 @@ import java.util.List;
 
 public class FindFragment extends BaseFragment<FindContract.Presenter> implements FindContract.View {
 
-    private ProgressDialog mProgress;
     private StaggeredGrid2Adapter mAdapter;
+    private LoadingDialog mDialog;
 
     private FindFragment() {
     }
@@ -100,12 +100,12 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
     @Override
     public void showProgress(boolean alive) {
         if (alive) {
-            mProgress = ProgressDialog.show(getContext(), "", "加载中...", false, false);
-            mProgress.show();
+            mDialog = new LoadingDialog();
+            mDialog.show(getFragmentManager(), "promptDialog");
         } else {
-            if (mProgress != null && mProgress.isShowing()) {
-                mProgress.dismiss();
-                mProgress = null;
+            if (mDialog != null && mDialog.isVisible()) {
+                mDialog.dismiss();
+                mDialog = null;
             }
         }
     }
