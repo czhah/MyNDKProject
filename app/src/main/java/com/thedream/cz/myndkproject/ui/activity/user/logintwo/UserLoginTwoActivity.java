@@ -1,19 +1,19 @@
 package com.thedream.cz.myndkproject.ui.activity.user.logintwo;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.mvp.factory.CreatePresenter;
 import com.thedream.cz.myndkproject.mvp.view.BaseMvpActivity;
 import com.thedream.cz.myndkproject.ui.activity.find.content.FindActivity;
+import com.thedream.cz.myndkproject.ui.dialog.LoadingDialog;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
 
 @CreatePresenter(UserLoginTwoPresenter.class)
 public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, UserLoginTwoPresenter> implements UserLoginTwoView {
 
-    private ProgressDialog mProgress;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +27,11 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
     @Override
     public void showProgress(boolean isShow) {
         if (isShow) {
-            mProgress = ProgressDialog.show(this, "", "加载中...", false, false);
-            mProgress.show();
+            mLoadingDialog = LoadingDialog.show(getSupportFragmentManager(), R.string.text_loading, false);
         } else {
-            if (mProgress != null && mProgress.isShowing()) {
-                mProgress.dismiss();
-                mProgress = null;
+            if (mLoadingDialog != null && mLoadingDialog.isVisible()) {
+                mLoadingDialog.dismiss();
+                mLoadingDialog = null;
             }
         }
     }

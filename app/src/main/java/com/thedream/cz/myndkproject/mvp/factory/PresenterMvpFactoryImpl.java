@@ -2,6 +2,7 @@ package com.thedream.cz.myndkproject.mvp.factory;
 
 import com.thedream.cz.myndkproject.mvp.presenter.BaseMvpPresenter;
 import com.thedream.cz.myndkproject.mvp.view.BaseMvpView;
+import com.thedream.cz.myndkproject.utils.PrintUtil;
 
 /**
  * Created by cz on 2017/12/9.
@@ -29,11 +30,13 @@ public class PresenterMvpFactoryImpl<V extends BaseMvpView, P extends BaseMvpPre
         if (annotation != null) {
             pClass = (Class<P>) annotation.value();
         }
+        PrintUtil.print("是否包含注解:" + (pClass != null));
         return pClass == null ? null : new PresenterMvpFactoryImpl<V, P>(pClass);
     }
 
     @Override
     public P createMvpPresenter() {
+        PrintUtil.printCZ("创建P层创建工厂,编译期会检查注解的P层是否为空");
         try {
             return mPresenterClass.newInstance();
         } catch (Exception e) {

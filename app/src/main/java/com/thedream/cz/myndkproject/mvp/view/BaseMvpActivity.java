@@ -17,6 +17,7 @@ public class BaseMvpActivity<V extends BaseMvpView, P extends BaseMvpPresenter<V
 
     private static final String PRESENTER_SAVE_KEY = "presenter_save_key";
 
+    //  P层代理类
     private BaseMvpProxy<V, P> mProxy = new BaseMvpProxy<>(PresenterMvpFactoryImpl.<V, P>createFactory(getClass()));
 
     @Override
@@ -29,12 +30,6 @@ public class BaseMvpActivity<V extends BaseMvpView, P extends BaseMvpPresenter<V
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mProxy.onDestroy();
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle(PRESENTER_SAVE_KEY, mProxy.onSaveInstanceState());
@@ -44,4 +39,11 @@ public class BaseMvpActivity<V extends BaseMvpView, P extends BaseMvpPresenter<V
     public P getMvpPresenter() {
         return mProxy.getMvpPresenter();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mProxy.onDestroy();
+    }
+
 }

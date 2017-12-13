@@ -100,8 +100,7 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
     @Override
     public void showProgress(boolean alive) {
         if (alive) {
-            mDialog = new LoadingDialog();
-            mDialog.show(getFragmentManager(), "promptDialog");
+            mDialog = LoadingDialog.show(getFragmentManager(), R.string.text_loading, false);
         } else {
             if (mDialog != null && mDialog.isVisible()) {
                 mDialog.dismiss();

@@ -6,12 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/btn_15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="15测试多布局" />
 
     <Button
         android:id="@+id/btn_14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="14处理瀑布流" />
+        android:text="14处理瀑布流"
+        app:layout_constraintTop_toBottomOf="@id/btn_15" />
 
     <Button
         android:id="@+id/btn_13"

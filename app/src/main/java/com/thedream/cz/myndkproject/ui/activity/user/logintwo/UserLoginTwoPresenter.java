@@ -1,5 +1,7 @@
 package com.thedream.cz.myndkproject.ui.activity.user.logintwo;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.thedream.cz.myndkproject.bean.WebResultInfo;
@@ -18,11 +20,33 @@ import java.util.List;
 
 public class UserLoginTwoPresenter extends BaseMvpPresenter<UserLoginTwoView> {
 
+    private static final String EXTRA_UID = "extra_uid";
+
     private CommonDataRepository mRepository;
     private String uid;
 
     public UserLoginTwoPresenter() {
+        PrintUtil.printCZ("创建UserLoginTwoPresenter");
         this.mRepository = ((BaseApplication) BaseApplication.mApplication).getCommonDataRepository();
+    }
+
+    @Override
+    public void onCreatePresenter(@Nullable Bundle saveState) {
+        super.onCreatePresenter(saveState);
+        PrintUtil.printCZ("onCreatePresenter");
+        if (saveState == null) {
+            return;
+        }
+        String uid = saveState.getString(EXTRA_UID);
+        PrintUtil.printCZ("恢复之后的uid:" + uid);
+    }
+
+    @Override
+    public Bundle onSaveInstanceState() {
+        PrintUtil.printCZ("需要保存的uid:" + uid);
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_UID, uid + "xxxx");
+        return bundle;
     }
 
     private final OnResultListener listener = new OnResultListener<LoginInfo>() {
@@ -62,6 +86,12 @@ public class UserLoginTwoPresenter extends BaseMvpPresenter<UserLoginTwoView> {
         }
         getMvpView().showProgress(true);
         mRepository.queryLocalLogin(uid, listener);
+    }
+
+    @Override
+    public void onDestroyPresenter() {
+        super.onDestroyPresenter();
+        PrintUtil.printCZ("这里执行一些取消请求的操作");
     }
 
     public void queryList() {

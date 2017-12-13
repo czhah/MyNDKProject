@@ -12,7 +12,6 @@ public interface PresenterProxyInterface<V extends BaseMvpView, P extends BaseMv
 
     /**
      * 获取创建的Presenter
-     *
      * @return
      */
     P getMvpPresenter();
