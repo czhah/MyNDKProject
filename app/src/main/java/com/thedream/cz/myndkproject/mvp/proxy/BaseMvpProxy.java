@@ -9,7 +9,7 @@ import com.thedream.cz.myndkproject.utils.PrintUtil;
 
 /**
  * Created by cz on 2017/12/9.
- *  P层工厂
+ *  P层代理类
  */
 public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> implements PresenterProxyInterface<V, P> {
 
@@ -36,11 +36,8 @@ public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> 
      */
     @Override
     public P getMvpPresenter() {
-        PrintUtil.printE("Proxy getMvpPresenter");
         if (mFactory != null) {
-            PrintUtil.printCZ("是否需要创建P层:" + (mPresenter == null));
             if (mPresenter == null) {
-                PrintUtil.printCZ("在此处创建P层" + (mBundle == null));
                 mPresenter = mFactory.createMvpPresenter();
                 mPresenter.onCreatePresenter(mBundle == null ? null : mBundle.getBundle(PRESENTER_KEY));
             }
@@ -87,9 +84,8 @@ public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> 
      * @return
      */
     public Bundle onSaveInstanceState() {
-        PrintUtil.printE("Proxy  onSaveInstanceState() = 保存信息 判断mPresenter是否为空" + (mPresenter != null));
         getMvpPresenter();
-
+        PrintUtil.printE("Proxy  onSaveInstanceState = 保存信息");
         Bundle bundle = new Bundle();
         if (mPresenter != null) {
             bundle.putBundle(PRESENTER_KEY, mPresenter.onSaveInstanceState());
@@ -102,7 +98,7 @@ public class BaseMvpProxy<V extends BaseMvpView, P extends BaseMvpPresenter<V>> 
      * @param savedInstanceState
      */
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        PrintUtil.printE("Proxy  onRestoreInstanceState = 恢复信息" + (mPresenter != null));
+        PrintUtil.printE("Proxy  onRestoreInstanceState = 恢复信息" + (savedInstanceState != null));
         mBundle = savedInstanceState;
     }
 }

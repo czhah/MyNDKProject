@@ -9,7 +9,7 @@ import android.view.ViewGroup;
  *  GridLayoutManager：不同布局适配基类
  */
 
-public abstract class BaseGridMultiItemAdapter<T, K extends BaseViewHolder> extends BaseQuickAdapter<T, K> {
+public abstract class BaseMultiItemAdapter<T, K extends BaseViewHolder> extends BaseQuickAdapter<T, K> {
 
     private SparseIntArray layouts;
 

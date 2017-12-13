@@ -63,7 +63,7 @@ public class CommonDataRepository {
                     if (webResultInfo.getStatusCode() == WebResultInfo.RESULT_SUCCESS) {
                         listener.onSuccess(webResultInfo.getData());
                     } else {
-                        listener.onFailed(WebResultInfo.RESULT_FAILED);
+                        listener.onFailed(webResultInfo.getStatusCode());
                     }
                 }, (throwable) -> {
                     listener.onFailed(WebResultInfo.RESULT_FAILED);

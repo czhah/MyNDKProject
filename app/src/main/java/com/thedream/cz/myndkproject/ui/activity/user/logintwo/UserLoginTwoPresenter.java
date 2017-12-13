@@ -33,7 +33,6 @@ public class UserLoginTwoPresenter extends BaseMvpPresenter<UserLoginTwoView> {
     @Override
     public void onCreatePresenter(@Nullable Bundle saveState) {
         super.onCreatePresenter(saveState);
-        PrintUtil.printCZ("onCreatePresenter");
         if (saveState == null) {
             return;
         }
@@ -43,9 +42,9 @@ public class UserLoginTwoPresenter extends BaseMvpPresenter<UserLoginTwoView> {
 
     @Override
     public Bundle onSaveInstanceState() {
-        PrintUtil.printCZ("需要保存的uid:" + uid);
+        PrintUtil.printCZ("需要保存的uid: xxx");
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_UID, uid + "xxxx");
+        bundle.putString(EXTRA_UID, "xxxx");
         return bundle;
     }
 
@@ -64,7 +63,7 @@ public class UserLoginTwoPresenter extends BaseMvpPresenter<UserLoginTwoView> {
 
         @Override
         public void onFailed(int code) {
-            if (getMvpView() != null) return;
+            if (getMvpView() == null) return;
             getMvpView().showProgress(false);
             getMvpView().onError(code);
         }
@@ -103,7 +102,7 @@ public class UserLoginTwoPresenter extends BaseMvpPresenter<UserLoginTwoView> {
                         PrintUtil.printCZ("查询所有:" + info.toString());
                     }
                 } else {
-                    if (getMvpView() != null) return;
+                    if (getMvpView() == null) return;
                     getMvpView().showProgress(false);
                     getMvpView().onError(WebResultInfo.RESULT_FAILED);
                 }

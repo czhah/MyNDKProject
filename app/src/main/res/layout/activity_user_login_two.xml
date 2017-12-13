@@ -12,4 +12,11 @@
         android:layout_height="wrap_content"
         android:text="登录" />
 
+    <Button
+        android:id="@+id/btn_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_login"
+        android:text="测试" />
+
 </android.support.constraint.ConstraintLayout>

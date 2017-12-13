@@ -30,7 +30,6 @@ public class PresenterMvpFactoryImpl<V extends BaseMvpView, P extends BaseMvpPre
         if (annotation != null) {
             pClass = (Class<P>) annotation.value();
         }
-        PrintUtil.print("是否包含注解:" + (pClass != null));
         return pClass == null ? null : new PresenterMvpFactoryImpl<V, P>(pClass);
     }
 
