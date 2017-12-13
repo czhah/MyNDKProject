@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.ui.adapter.base;
+package com.cz.resource.baserecyclerviewadapterhelper;
 
 import android.support.annotation.LayoutRes;
 import android.util.SparseIntArray;

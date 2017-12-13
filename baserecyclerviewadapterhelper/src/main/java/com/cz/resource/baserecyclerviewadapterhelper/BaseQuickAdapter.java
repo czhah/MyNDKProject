@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.ui.adapter.base;
+package com.cz.resource.baserecyclerviewadapterhelper;
 
 import android.animation.Animator;
 import android.content.Context;
@@ -17,14 +17,14 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.thedream.cz.myndkproject.ui.adapter.base.animation.AlphaInAnimation;
-import com.thedream.cz.myndkproject.ui.adapter.base.animation.BaseAnimation;
-import com.thedream.cz.myndkproject.ui.adapter.base.animation.ScaleInAnimation;
-import com.thedream.cz.myndkproject.ui.adapter.base.animation.SlideInBottomAnimation;
-import com.thedream.cz.myndkproject.ui.adapter.base.animation.SlideInLeftAnimation;
-import com.thedream.cz.myndkproject.ui.adapter.base.animation.SlideInRightAnimation;
-import com.thedream.cz.myndkproject.ui.adapter.base.loadmore.LoadMoreView;
-import com.thedream.cz.myndkproject.ui.adapter.base.loadmore.SimpleLoadMoreView;
+import com.cz.resource.baserecyclerviewadapterhelper.animation.AlphaInAnimation;
+import com.cz.resource.baserecyclerviewadapterhelper.animation.BaseAnimation;
+import com.cz.resource.baserecyclerviewadapterhelper.animation.ScaleInAnimation;
+import com.cz.resource.baserecyclerviewadapterhelper.animation.SlideInBottomAnimation;
+import com.cz.resource.baserecyclerviewadapterhelper.animation.SlideInLeftAnimation;
+import com.cz.resource.baserecyclerviewadapterhelper.animation.SlideInRightAnimation;
+import com.cz.resource.baserecyclerviewadapterhelper.loadmore.LoadMoreView;
+import com.cz.resource.baserecyclerviewadapterhelper.loadmore.SimpleLoadMoreView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -314,25 +314,29 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         return baseViewHolder;
     }
 
-    private void bindViewClickListener(RecyclerView.ViewHolder holder) {
+    private void bindViewClickListener(final RecyclerView.ViewHolder holder) {
         if (holder == null) {
             return;
         }
-        View view = holder.itemView;
+        final View view = holder.itemView;
         if (view == null) {
             return;
         }
         if (mOnItemClickListener != null) {
-            view.setOnClickListener(v ->
-                    mOnItemClickListener.onItemClick(v, holder.getLayoutPosition() - getHeaderLayoutCount())
-            );
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onItemClick(v, holder.getLayoutPosition() - getHeaderLayoutCount());
+                }
+            });
         }
         if (mOnItemLongClickListener != null) {
-            view.setOnLongClickListener(v ->
-                    {
-                        return mOnItemLongClickListener.onItemLongClick(view, holder.getLayoutPosition() - getHeaderLayoutCount());
-                    }
-            );
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return mOnItemLongClickListener.onItemLongClick(view, holder.getLayoutPosition() - getHeaderLayoutCount());
+                }
+            });
         }
 
     }

@@ -1,1 +1,1 @@
-include ':app', ':skintool'
+include ':app', ':skintool', ':baserecyclerviewadapterhelper'

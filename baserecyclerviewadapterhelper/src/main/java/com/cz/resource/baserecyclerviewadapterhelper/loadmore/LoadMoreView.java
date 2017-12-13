@@ -1,9 +1,10 @@
-package com.thedream.cz.myndkproject.ui.adapter.base.loadmore;
+package com.cz.resource.baserecyclerviewadapterhelper.loadmore;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 
-import com.thedream.cz.myndkproject.ui.adapter.base.BaseViewHolder;
+import com.cz.resource.baserecyclerviewadapterhelper.BaseViewHolder;
+
 
 /**
  * Created by cz on 2017/12/11.

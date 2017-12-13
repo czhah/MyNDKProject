@@ -7,9 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
+import com.cz.resource.baserecyclerviewadapterhelper.BaseQuickAdapter;
+import com.cz.resource.baserecyclerviewadapterhelper.BaseStaggeredGridAdapter;
 import com.thedream.cz.myndkproject.ui.adapter.StaggeredGridAdapter;
-import com.thedream.cz.myndkproject.ui.adapter.base.BaseQuickAdapter;
-import com.thedream.cz.myndkproject.ui.adapter.base.BaseStaggeredGridAdapter;
 import com.thedream.cz.myndkproject.utils.WindowUtil;
 
 /**

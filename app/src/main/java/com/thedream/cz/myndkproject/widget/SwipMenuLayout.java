@@ -21,16 +21,13 @@ public class SwipMenuLayout extends ViewGroup {
 
     //  最小滑动距离
     private int mScaledTouchSlop;
-    private int maxMoveHeight = 5;
     private float downX;
-    private float downY;
     private float lastX;
     private float lastY;
     private int maxMoveLength;
     private int mMaxVelocity;
     private VelocityTracker mVelocityTracker;
     private int pointerId;
-    private float velocityX;
     private ValueAnimator closeAnimator;
     private int mLimit;
     private ValueAnimator expandAnimator;
@@ -128,7 +125,7 @@ public class SwipMenuLayout extends ViewGroup {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 lastX = downX = eventX;
-                lastY = downY = eventY;
+                lastY = eventY;
                 //  可能有多个触点，只取第一个
                 pointerId = ev.getPointerId(0);
                 if(mViewCache != null) {
@@ -167,8 +164,6 @@ public class SwipMenuLayout extends ViewGroup {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 verTracker.computeCurrentVelocity(1000, mMaxVelocity);
-                float velocityX = verTracker.getXVelocity(pointerId);
-
                 //  释放
                 //  如果滑动距离超过最大滑出距离的1/3，则算滑出，否则回到原点
                 if(downX - eventX > mLimit) {

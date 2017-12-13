@@ -1,4 +1,4 @@
-package com.thedream.cz.myndkproject.ui.adapter.base.animation;
+package com.cz.resource.baserecyclerviewadapterhelper.animation;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;

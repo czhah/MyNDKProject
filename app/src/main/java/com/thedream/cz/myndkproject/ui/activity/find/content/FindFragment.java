@@ -8,15 +8,14 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.cz.resource.baserecyclerviewadapterhelper.BaseQuickAdapter;
+import com.cz.resource.baserecyclerviewadapterhelper.BaseStaggeredGridAdapter;
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.data.entity.FindInfo;
 import com.thedream.cz.myndkproject.ui.adapter.StaggeredGrid2Adapter;
-import com.thedream.cz.myndkproject.ui.adapter.base.BaseQuickAdapter;
-import com.thedream.cz.myndkproject.ui.adapter.base.BaseStaggeredGridAdapter;
 import com.thedream.cz.myndkproject.ui.common.BaseFragment;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
-import com.thedream.cz.myndkproject.widget.ScrollLayout;
 import com.thedream.cz.myndkproject.widget.recyclerview.FindDividerPallsItemDecoration;
 
 import java.util.List;
@@ -30,7 +29,6 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
 
     private ProgressDialog mProgress;
     private StaggeredGrid2Adapter mAdapter;
-    private ScrollLayout mScrollLayout;
 
     private FindFragment() {
     }
@@ -47,8 +45,7 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mScrollLayout = (ScrollLayout) view.findViewById(R.id.scrollLayout);
-        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.addItemDecoration(new FindDividerPallsItemDecoration(getContext(), BaseStaggeredGridAdapter.STAGGERED_ITEM_DECORATION));
         mRecyclerView.setAdapter(mAdapter = new StaggeredGrid2Adapter(getContext(), 2));
@@ -78,6 +75,10 @@ public class FindFragment extends BaseFragment<FindContract.Presenter> implement
                 ToastUtil.showToast(getContext(), "长按了第 " + info.getText() + " 个");
                 return true;
             }
+        });
+        mAdapter.setOnItemChildClickListener((v, position) -> {
+            FindInfo info = mAdapter.getItem(position);
+            ToastUtil.showToast(getContext(), "点击了Child第 " + info.getText() + " 个");
         });
 //        mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
     }

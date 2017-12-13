@@ -1,9 +1,8 @@
-package com.thedream.cz.myndkproject.ui.adapter.base;
+package com.cz.resource.baserecyclerviewadapterhelper;
 
 import android.content.Context;
 
-import com.thedream.cz.myndkproject.ui.common.BaseApplication;
-import com.thedream.cz.myndkproject.utils.WindowUtil;
+import com.cz.resource.baserecyclerviewadapterhelper.utils.WindowHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +27,9 @@ public abstract class BaseStaggeredGridAdapter<T, K extends BaseViewHolder> exte
 
     public BaseStaggeredGridAdapter(Context context, int spanCount) {
         mSpanCount = spanCount;
-        screenWidth = WindowUtil.getScreenWidth(context);
+        screenWidth = WindowHelper.getScreenWidth(context);
         //  view之间的间隔
-        decoration = WindowUtil.dp2px(BaseApplication.mApplication, STAGGERED_ITEM_DECORATION);
+        decoration = WindowHelper.dp2px(context, STAGGERED_ITEM_DECORATION);
         //  view宽度是屏幕宽度去掉间隔后除以2
         viewWidth = (screenWidth - decoration * 2) / 2;
     }

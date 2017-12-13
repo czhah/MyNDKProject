@@ -3,10 +3,10 @@ package com.thedream.cz.myndkproject.ui.adapter;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.cz.resource.baserecyclerviewadapterhelper.BaseStaggeredGridAdapter;
+import com.cz.resource.baserecyclerviewadapterhelper.BaseViewHolder;
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.data.entity.FindInfo;
-import com.thedream.cz.myndkproject.ui.adapter.base.BaseStaggeredGridAdapter;
-import com.thedream.cz.myndkproject.ui.adapter.base.BaseViewHolder;
 
 /**
  * Created by CZ on 2017/12/11.
@@ -33,6 +33,9 @@ public class StaggeredGrid2Adapter extends BaseStaggeredGridAdapter<FindInfo, Ba
 
     @Override
     protected void convert(BaseViewHolder holder, FindInfo info) {
+        if (info.getText().equals("1")) {
+            holder.addOnClickListener(R.id.tv_find_text);
+        }
         holder.setWidthAndHeight(R.id.tv_find_text, viewWidth, heightList.get(getRealPos(holder.getLayoutPosition())))
                 .setText(R.id.tv_find_text, info.getText())
                 .setBackgroundColor(R.id.tv_find_text, colorArr[getRealPos(holder.getLayoutPosition()) % colorArr.length]);

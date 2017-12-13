@@ -25,7 +25,7 @@ public class UserLoginPresenter implements UserLoginContract.Presenter {
         this.mRepository = repository;
     }
 
-    private final OnResultListener listener = new OnResultListener<LoginInfo>() {
+    private final OnResultListener<LoginInfo> listener = new OnResultListener<LoginInfo>() {
         @Override
         public void onSuccess(LoginInfo loginInfo) {
             if (!mView.isActive()) return;

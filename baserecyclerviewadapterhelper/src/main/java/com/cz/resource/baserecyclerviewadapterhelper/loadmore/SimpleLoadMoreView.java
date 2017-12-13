@@ -1,6 +1,6 @@
-package com.thedream.cz.myndkproject.ui.adapter.base.loadmore;
+package com.cz.resource.baserecyclerviewadapterhelper.loadmore;
 
-import com.thedream.cz.myndkproject.R;
+import com.cz.resource.baserecyclerviewadapterhelper.R;
 
 /**
  * Created by cz on 2017/12/11.
