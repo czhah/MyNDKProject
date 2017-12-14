@@ -4,4 +4,24 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#000000</color>
+
+    <!--标准颜色-->
+    <!--重要-->
+    <color name="color_strong_yellow">#fbec00</color>
+    <color name="color_strong_black">#1a1a18</color>
+    <color name="color_strong_violet">#8800fb</color>
+    <!--辅助-->
+    <color name="color_middle_red">#e81b2f</color>
+    <color name="color_middle_crimson">#7b0e19</color>
+    <color name="color_middle_blue">#0078ff</color>
+    <color name="color_middle_azury">#00ccff</color>
+    <color name="color_middle_brown">#737358</color>
+    <!--一般-->
+    <color name="color_general_gray">#8e8e8e</color>
+    <color name="color_general_grayish">#a9a9a9</color>
+    <!--常用于分割线的颜色-->
+    <color name="color_general_grayness">#d3d3d3</color>
+    <!--较弱-->
+    <!--常用与布局背景色-->
+    <color name="color_weaker_ashen">#f0f0f0</color>
 </resources>

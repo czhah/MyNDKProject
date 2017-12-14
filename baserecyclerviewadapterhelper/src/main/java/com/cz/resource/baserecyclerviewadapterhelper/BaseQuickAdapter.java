@@ -137,7 +137,13 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         refreshData(list, true);
     }
 
-    public void refreshData(List<T> list, boolean refresh) {
+    /**
+     * 此方法必须在子类中调用
+     *
+     * @param list
+     * @param refresh
+     */
+    protected void refreshData(List<T> list, boolean refresh) {
         this.mData = list == null ? new ArrayList<T>() : list;
         if (refresh) notifyDataSetChanged();
     }
@@ -150,7 +156,13 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         loadMore(list, true);
     }
 
-    public void loadMore(List<T> list, boolean refresh) {
+    /**
+     * 此方法必须在子类中调用
+     *
+     * @param list
+     * @param refresh
+     */
+    protected void loadMore(List<T> list, boolean refresh) {
         if (list == null) return;
         final int newSize = list.size();
         this.mData.addAll(list);

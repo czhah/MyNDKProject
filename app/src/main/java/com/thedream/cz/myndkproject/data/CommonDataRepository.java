@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -95,37 +96,38 @@ public class CommonDataRepository {
      * @param listener
      */
     public void queryLocalLogin(OnResultListener<List<LoginInfo>> listener) {
-//        Observable.create(new ObservableOnSubscribe<List<LoginInfo>>() {
-//            @Override
-//            public void subscribe(@NonNull ObservableEmitter<List<LoginInfo>> e) throws Exception {
-//                e.onNext(mLoginDao.queryList());
-//                e.onComplete();
-//            }
-//        }).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe((loginInfo -> {
-//                    PrintUtil.printCZ("成功线程：" + Thread.currentThread());
-//                    listener.onSuccess(loginInfo);
-//                }), (throwable -> {
-//                    PrintUtil.printCZ("失败线程：" + Thread.currentThread());
-//                    listener.onFailed(WebResultInfo.RESULT_FAILED);
-//                }));
-
-        Observable.just("haha").subscribeOn(Schedulers.newThread())
-                .map(new Function<String, Integer>() {
-                    @Override
-                    public Integer apply(@NonNull String s) throws Exception {
-                        PrintUtil.printCZ("map 线程:" + Thread.currentThread());
-                        return 1;
-                    }
-                }).observeOn(AndroidSchedulers.mainThread())
-                .doOnNext((integer -> {
-                    PrintUtil.printCZ("doOnNext 线程:" + Thread.currentThread());
-                }))
-                .observeOn(Schedulers.io())
-                .subscribe((integer -> {
-                    PrintUtil.printCZ("subscribe 线程:" + Thread.currentThread());
-
+        Observable.create(new ObservableOnSubscribe<List<LoginInfo>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<LoginInfo>> e) throws Exception {
+                e.onNext(mLoginDao.queryList());
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((loginInfo -> {
+                    PrintUtil.printCZ("成功线程：" + Thread.currentThread());
+                    listener.onSuccess(loginInfo);
+                }), (throwable -> {
+                    PrintUtil.printCZ("失败线程：" + Thread.currentThread());
+                    listener.onFailed(WebResultInfo.RESULT_FAILED);
                 }));
+
+//        Observable.just("haha").subscribeOn(Schedulers.newThread())
+//                .map(new Function<String, Integer>() {
+//                    @Override
+//                    public Integer apply(@NonNull String s) throws Exception {
+//                        PrintUtil.printCZ("map 线程:" + Thread.currentThread());
+//                        return 1;
+//                    }
+//                }).observeOn(AndroidSchedulers.mainThread())
+//                .doOnNext((integer -> {
+//                    PrintUtil.printCZ("doOnNext 线程:" + Thread.currentThread());
+//                }))
+//                .observeOn(Schedulers.io())
+//                .subscribe((integer -> {
+//                    PrintUtil.printCZ("subscribe 线程:" + Thread.currentThread());
+//
+//                }));
     }
+
 }

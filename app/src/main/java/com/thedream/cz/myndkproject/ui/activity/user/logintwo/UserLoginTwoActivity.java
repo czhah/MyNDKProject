@@ -5,7 +5,9 @@ import android.os.Bundle;
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.mvp.factory.CreatePresenter;
 import com.thedream.cz.myndkproject.mvp.view.BaseMvpActivity;
+import com.thedream.cz.myndkproject.ui.activity.find.contenttwo.FindTwoFragment;
 import com.thedream.cz.myndkproject.ui.dialog.LoadingDialog;
+import com.thedream.cz.myndkproject.utils.ActivityUtil;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
 @CreatePresenter(UserLoginTwoPresenter.class)
@@ -18,11 +20,18 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login_two);
         findViewById(R.id.btn_login).setOnClickListener(view -> {
-            getMvpPresenter().login("13691923610", "123456");
+            getMvpPresenter().login("13200000001", "123456");
         });
 
         findViewById(R.id.btn_test).setOnClickListener(view -> {
         });
+        FindTwoFragment findTwoFragment = (FindTwoFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.frameLayout);
+
+        if (findTwoFragment == null) {
+            findTwoFragment = FindTwoFragment.newInstance();
+            ActivityUtil.addFragmentToActivity(getSupportFragmentManager(), findTwoFragment, R.id.frameLayout);
+        }
     }
 
     @Override
@@ -41,6 +50,7 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
     public void onResult(String result) {
         PrintUtil.printCZ("result：" + result);
         ToastUtil.showToast(this, "登录成功！");
+
     }
 
     @Override
