@@ -21,7 +21,6 @@ public class BannerActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private Button btnPlay;
-    private Button btnPause;
     private MyAdapter myAdapter;
     private List<String> urlList = new ArrayList<>();
     private ImageView ivEmpty;
@@ -41,7 +40,6 @@ public class BannerActivity extends AppCompatActivity {
         viewPager.setAdapter(myAdapter);
 
         btnPlay = (Button) findViewById(R.id.btn_play);
-        btnPause = (Button) findViewById(R.id.btn_pause);
         ivEmpty = (ImageView) findViewById(R.id.iv_empty);
 
         btnPlay.setOnClickListener(new View.OnClickListener() {

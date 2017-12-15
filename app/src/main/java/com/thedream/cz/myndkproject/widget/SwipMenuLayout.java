@@ -27,7 +27,6 @@ public class SwipMenuLayout extends ViewGroup {
     private int maxMoveLength;
     private int mMaxVelocity;
     private VelocityTracker mVelocityTracker;
-    private int pointerId;
     private ValueAnimator closeAnimator;
     private int mLimit;
     private ValueAnimator expandAnimator;
@@ -127,7 +126,6 @@ public class SwipMenuLayout extends ViewGroup {
                 lastX = downX = eventX;
                 lastY = eventY;
                 //  可能有多个触点，只取第一个
-                pointerId = ev.getPointerId(0);
                 if(mViewCache != null) {
                     if(mViewCache != this)
                         mViewCache.swipOrigin();

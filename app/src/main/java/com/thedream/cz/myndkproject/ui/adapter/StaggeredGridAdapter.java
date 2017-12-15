@@ -32,7 +32,6 @@ public class StaggeredGridAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int ITEM_DECORATION = 2;
 
     public static final int HEAD_TYPE = 0x00000111;
-    private static final int FOOT_TYPE = 0x00000222;
     public static final int DEFAULT_TYPE = 0x00000333;
 
     private List<FindInfo> data = new ArrayList<>();
@@ -45,7 +44,6 @@ public class StaggeredGridAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int viewWidth;
     private final int decoration;
     private View mHeadView;
-    private View mFootView;
 
     public StaggeredGridAdapter(Context context, int spanCount) {
         this.mContext = context;

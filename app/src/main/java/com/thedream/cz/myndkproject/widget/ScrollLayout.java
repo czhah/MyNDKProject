@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.view.NestedScrollingParent;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.thedream.cz.myndkproject.utils.PrintUtil;
 
 public class ScrollLayout extends LinearLayout implements NestedScrollingParent {
 
-    private int mTouchSlop;
     private int mMaximumVelocity;
     private int mMinimumVelocity;
     private ImageView ivBanner;
@@ -41,7 +39,6 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
 
     public ScrollLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mMaximumVelocity = ViewConfiguration.get(context)
                 .getScaledMaximumFlingVelocity();
         mMinimumVelocity = ViewConfiguration.get(context)
@@ -82,7 +79,7 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         boolean hideHead = dy > 0 && getScrollY() < mHeadHeight;
-        boolean showHead = dy < 0 && getScrollY() > 0 && !ViewCompat.canScrollVertically(target, -1);
+        boolean showHead = dy < 0 && getScrollY() > 0 && !target.canScrollVertically(-1);
         if (hideHead || showHead) {
             scrollBy(0, dy);
             consumed[1] = dy;
@@ -158,37 +155,6 @@ public class ScrollLayout extends LinearLayout implements NestedScrollingParent 
         mOffsetAnimator.setDuration(Math.min(duration, 600));
         mOffsetAnimator.setIntValues(currentOffset, endY);
         mOffsetAnimator.start();
-    }
-
-    private void animateScroll(float velocityY, final int duration, boolean consumed) {
-        final int currentOffset = getScrollY();
-        if (mOffsetAnimator == null) {
-            mOffsetAnimator = new ValueAnimator();
-            mOffsetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            mOffsetAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    if (animation.getAnimatedValue() instanceof Integer) {
-                        scrollTo(0, (Integer) animation.getAnimatedValue());
-                    }
-                }
-            });
-        } else {
-            mOffsetAnimator.cancel();
-        }
-        mOffsetAnimator.setDuration(Math.min(duration, 600));
-
-        if (velocityY >= 0) {
-            mOffsetAnimator.setIntValues(currentOffset, mHeadHeight);
-            mOffsetAnimator.start();
-        } else {
-            //如果子View没有消耗down事件 那么就让自身滑倒0位置
-            if (!consumed) {
-                mOffsetAnimator.setIntValues(currentOffset, 0);
-                mOffsetAnimator.start();
-            }
-
-        }
     }
 
     @Override

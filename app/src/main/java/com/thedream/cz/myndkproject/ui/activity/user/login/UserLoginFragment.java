@@ -1,7 +1,6 @@
 package com.thedream.cz.myndkproject.ui.activity.user.login;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,7 @@ import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.ui.activity.find.content.FindActivity;
 import com.thedream.cz.myndkproject.ui.common.BaseApplication;
 import com.thedream.cz.myndkproject.ui.common.BaseFragment;
+import com.thedream.cz.myndkproject.ui.dialog.LoadingDialog;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
 
@@ -22,7 +22,7 @@ public class UserLoginFragment extends BaseFragment<UserLoginContract.Presenter>
 
     private EditText etName;
     private EditText etPwd;
-    private ProgressDialog mProgress;
+    private LoadingDialog mLoadingDialog;
 
     public static UserLoginFragment newInstance() {
         return new UserLoginFragment();
@@ -63,12 +63,11 @@ public class UserLoginFragment extends BaseFragment<UserLoginContract.Presenter>
     @Override
     public void showProgress(boolean isShow) {
         if (isShow) {
-            mProgress = ProgressDialog.show(getContext(), "", "加载中...", false, false);
-            mProgress.show();
+            mLoadingDialog = LoadingDialog.show(getChildFragmentManager(), R.string.text_loading, false);
         } else {
-            if (mProgress != null && mProgress.isShowing()) {
-                mProgress.dismiss();
-                mProgress = null;
+            if (mLoadingDialog != null && mLoadingDialog.isVisible()) {
+                mLoadingDialog.dismiss();
+                mLoadingDialog = null;
             }
         }
     }

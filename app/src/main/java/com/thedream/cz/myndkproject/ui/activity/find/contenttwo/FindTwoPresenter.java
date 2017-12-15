@@ -1,11 +1,9 @@
 package com.thedream.cz.myndkproject.ui.activity.find.contenttwo;
 
 import com.thedream.cz.myndkproject.bean.WebResultInfo;
-import com.thedream.cz.myndkproject.data.CommonDataRepository;
 import com.thedream.cz.myndkproject.data.entity.MultiItemInfo;
 import com.thedream.cz.myndkproject.listener.OnResultListener;
 import com.thedream.cz.myndkproject.mvp.presenter.BaseMvpPresenter;
-import com.thedream.cz.myndkproject.ui.common.BaseApplication;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
 import java.util.ArrayList;
@@ -24,10 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FindTwoPresenter extends BaseMvpPresenter<FindTwoView> {
 
-    private final CommonDataRepository mDataRepository;
-
     public FindTwoPresenter() {
-        mDataRepository = ((BaseApplication) BaseApplication.mApplication).getCommonDataRepository();
     }
 
     private final OnResultListener listener = new OnResultListener<List<MultiItemInfo>>() {
@@ -56,8 +51,9 @@ public class FindTwoPresenter extends BaseMvpPresenter<FindTwoView> {
         Observable.create(new ObservableOnSubscribe<List<? extends MultiItemInfo>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<? extends MultiItemInfo>> e) throws Exception {
+                PrintUtil.printCZ("执行中...");
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }

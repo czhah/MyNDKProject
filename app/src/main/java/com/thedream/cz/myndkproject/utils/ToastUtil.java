@@ -10,10 +10,8 @@ import com.thedream.cz.myndkproject.R;
  */
 
 public class ToastUtil {
-    private Context context;
 
     public ToastUtil(Context context) {
-        this.context = context.getApplicationContext();
     }
 
     public static void showToast(Context context, String str) {
@@ -25,6 +23,7 @@ public class ToastUtil {
     }
 
     public static void showResult(Context context, int result) {
+        PrintUtil.printCZ("请求失败: " + result);
         int resId = R.string.error_fail;
         switch (result) {
             case -1:

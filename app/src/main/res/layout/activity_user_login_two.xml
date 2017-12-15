@@ -13,11 +13,18 @@
         android:text="登录" />
 
     <Button
-        android:id="@+id/btn_test"
+        android:id="@+id/btn_upLoad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/btn_login"
-        android:text="测试" />
+        android:text="文件上传" />
+
+    <Button
+        android:id="@+id/btn_downLoad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_upLoad"
+        android:text="文件下载" />
 
     <FrameLayout
         android:id="@+id/frameLayout"

@@ -60,7 +60,7 @@ public class PallsBehavior extends CoordinatorLayout.Behavior<View> {
                         && !ViewCompat.getFitsSystemWindows(child)) {
                     // If the header is fitting system windows then we need to also,
                     // otherwise we'll get CoL's compatible measuring
-                    ViewCompat.setFitsSystemWindows(child, true);
+                    child.setFitsSystemWindows(true);
 
                     if (ViewCompat.getFitsSystemWindows(child)) {
                         // If the set succeeded, trigger a new layout and return true

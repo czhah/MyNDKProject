@@ -23,7 +23,12 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
             getMvpPresenter().login("13200000001", "123456");
         });
 
-        findViewById(R.id.btn_test).setOnClickListener(view -> {
+        findViewById(R.id.btn_upLoad).setOnClickListener(view -> {
+            getMvpPresenter().upLoad();
+        });
+
+        findViewById(R.id.btn_downLoad).setOnClickListener(view -> {
+            getMvpPresenter().downLoad();
         });
         FindTwoFragment findTwoFragment = (FindTwoFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frameLayout);
@@ -49,13 +54,13 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
     @Override
     public void onResult(String result) {
         PrintUtil.printCZ("result：" + result);
-        ToastUtil.showToast(this, "登录成功！");
+        ToastUtil.showToast(this, result);
 
     }
 
     @Override
     public void onError(int code) {
-        ToastUtil.showToast(this, "登录错误:" + code);
+        ToastUtil.showResult(this, code);
     }
 
 

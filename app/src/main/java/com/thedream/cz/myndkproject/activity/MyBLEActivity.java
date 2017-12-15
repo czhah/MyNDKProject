@@ -21,9 +21,6 @@ import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.bluetool.BluetoolGattAttributes;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MyBLEActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 101;
@@ -32,10 +29,7 @@ public class MyBLEActivity extends AppCompatActivity {
     private String mDeviceAddress;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
-    private boolean mScanning = false;
     private TextView tvDevice;
-    private List<String> addressList = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +84,11 @@ public class MyBLEActivity extends AppCompatActivity {
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
                 @Override
                 public void run() {
-                    mScanning = false;
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 }
             }, BluetoolGattAttributes.SCAN_TIME_OUT);
-            mScanning = true;
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
-            mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
     }

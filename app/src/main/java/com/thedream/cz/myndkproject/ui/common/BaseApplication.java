@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
 import com.thedream.cz.myndkproject.data.CommonDataRepository;
+import com.thedream.cz.myndkproject.data.UserDataRepository;
 import com.thedream.cz.myndkproject.data.local.AppLocalData;
 
 /**
@@ -17,6 +18,7 @@ public class BaseApplication extends MultiDexApplication {
     //  公共数据类
     private CommonDataRepository mCommonDataRepository;
     //  用户数据类
+    private UserDataRepository mUserDataRepository;
     //  活动数据类
     //  好友数据类
 
@@ -28,10 +30,16 @@ public class BaseApplication extends MultiDexApplication {
         AppLocalData mAppLocalData = AppLocalData.getInstance(mApplication);
 
         mCommonDataRepository = CommonDataRepository.getInstance(mAppLocalData.getLoginDao());
+
+        mUserDataRepository = UserDataRepository.getInstance();
     }
 
 
     public CommonDataRepository getCommonDataRepository() {
         return mCommonDataRepository;
+    }
+
+    public UserDataRepository getUserDataRepository() {
+        return mUserDataRepository;
     }
 }

@@ -24,6 +24,10 @@ public class LoadingDialog extends DialogFragment {
     int contentId = 0;
     private boolean cancelable = false;
 
+    public LoadingDialog() {
+        //  这里必须有无参构造函数
+    }
+
     private LoadingDialog(@StringRes int content, boolean cancelable) {
         this.contentId = content;
         this.cancelable = cancelable;

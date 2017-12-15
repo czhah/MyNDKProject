@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.cz.resource.baserecyclerviewadapterhelper.BaseQuickAdapter;
 import com.cz.resource.baserecyclerviewadapterhelper.BaseStaggeredGridAdapter;
-import com.thedream.cz.myndkproject.ui.adapter.StaggeredGridAdapter;
+import com.cz.resource.baserecyclerviewadapterhelper.BaseViewHolder;
 import com.thedream.cz.myndkproject.utils.WindowUtil;
 
 /**
@@ -35,18 +35,8 @@ public class FindDividerPallsItemDecoration extends RecyclerView.ItemDecoration 
         int spanCount = getSpanCount(parent);
         int itemCount = parent.getAdapter().getItemCount();
         int itemPosition = parent.getChildAdapterPosition(view);
-        RecyclerView.Adapter adapter = parent.getAdapter();
-        if (adapter instanceof StaggeredGridAdapter) {
-            if (adapter.getItemViewType(itemPosition) == StaggeredGridAdapter.DEFAULT_TYPE) {
-                int realPosition = ((StaggeredGridAdapter) adapter).getRealPosition(itemPosition);
-                boolean isLeft = ((StaggeredGridAdapter) adapter).isLeft(realPosition);
-                boolean isTop = realPosition < spanCount;
-                boolean isBottom = itemPosition > (itemCount - spanCount);
-                outRect.set(isLeft ? 0 : divier, isTop ? 0 : divier, isLeft ? divier : 0, isBottom ? 0 : divier);
-            } else {
-                outRect.set(0, 0, 0, 0);
-            }
-        }else if(adapter instanceof BaseStaggeredGridAdapter){
+        RecyclerView.Adapter<BaseViewHolder> adapter = parent.getAdapter();
+        if (adapter instanceof BaseStaggeredGridAdapter) {
             if(adapter.getItemViewType(itemPosition) == BaseQuickAdapter.CONTENT_VIEW) {
                 int realPosition = ((BaseStaggeredGridAdapter) adapter).getRealPos(itemPosition);
                 boolean isLeft = ((BaseStaggeredGridAdapter) adapter).isLeft(realPosition);

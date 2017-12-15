@@ -324,11 +324,6 @@ public class MyBluetoothActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private int updateBLEState() {
-        if (bluetoothAdapter == null) return -999;
-        return bluetoothAdapter.getState();
-    }
-
     private int updateBLEMode() {
         if (bluetoothAdapter == null) return -999;
         return bluetoothAdapter.getScanMode();

@@ -4,8 +4,11 @@ import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.thedream.cz.myndkproject.listener.IProgressListener;
 import com.thedream.cz.myndkproject.ui.common.BaseApplication;
 import com.thedream.cz.myndkproject.utils.NetWorkUtil;
+import com.thedream.cz.myndkproject.utils.PrintUtil;
+import com.thedream.cz.myndkproject.utils.ProgressUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,9 +45,15 @@ public class RetrofitFactory {
             Response originalResponse = chain.proceed(request);
             if (NetWorkUtil.isNetworkConnected(BaseApplication.mApplication)) {
                 //  有网络时 设置缓存
-                String cacheControl = request.cacheControl().toString();
+                int maxAge = 0; // read from cache
                 return originalResponse.newBuilder()
-                        .header("Cache-Control", cacheControl)
+                        .body(new ProgressUtil(originalResponse.body(), new IProgressListener() {
+                            @Override
+                            public void onProgress(long progress, long total, boolean isDone) {
+                                PrintUtil.printCZ("onProgress   progress:" + progress + "  total:" + total + "  isDone:" + isDone);
+                            }
+                        }))
+                        .header("Cache-Control", "public ,max-age=" + maxAge)
                         .removeHeader("Pragma")
                         .build();
             } else {
@@ -66,7 +75,6 @@ public class RetrofitFactory {
 
                 ClearableCookieJar cookieJar =
                         new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(BaseApplication.mApplication));
-
                 OkHttpClient.Builder builder = new OkHttpClient.Builder()
                         .cache(cache)
                         .cookieJar(cookieJar)
