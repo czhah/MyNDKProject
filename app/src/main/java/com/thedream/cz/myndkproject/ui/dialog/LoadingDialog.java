@@ -19,6 +19,8 @@ import com.thedream.cz.myndkproject.R;
  */
 public class LoadingDialog extends DialogFragment {
 
+    private static final String TAG = "LoadingDialog";
+
     private
     @StringRes
     int contentId = 0;
@@ -35,8 +37,20 @@ public class LoadingDialog extends DialogFragment {
 
     public static LoadingDialog show(FragmentManager fm, @StringRes int textId, boolean cancelable) {
         LoadingDialog mLoadingDialog = new LoadingDialog(textId, cancelable);
-        mLoadingDialog.show(fm, "loadingDialog");
+        mLoadingDialog.show(fm, TAG);
         return mLoadingDialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //  处理切换屏幕导致LoadingDialog不消失问题
+        if (savedInstanceState != null) {
+            LoadingDialog mLoadingDialog = (LoadingDialog) getFragmentManager().findFragmentByTag(TAG);
+            if (mLoadingDialog != null) {
+                mLoadingDialog.dismissAllowingStateLoss();
+            }
+        }
     }
 
     @Nullable

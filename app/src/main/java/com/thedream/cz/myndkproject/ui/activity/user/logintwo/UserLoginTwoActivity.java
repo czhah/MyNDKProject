@@ -50,7 +50,7 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
             mLoadingDialog = LoadingDialog.show(getSupportFragmentManager(), R.string.text_loading, false);
         } else {
             if (mLoadingDialog != null && mLoadingDialog.isVisible()) {
-                mLoadingDialog.dismiss();
+                mLoadingDialog.dismissAllowingStateLoss();
                 mLoadingDialog = null;
             }
         }
@@ -74,12 +74,4 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
         ToastUtil.showToast(this, text);
     }
 
-    @Override
-    protected void onDestroy() {
-        if (mLoadingDialog != null && mLoadingDialog.isVisible()) {
-            mLoadingDialog.dismiss();
-            mLoadingDialog = null;
-        }
-        super.onDestroy();
-    }
 }

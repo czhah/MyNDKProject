@@ -4,7 +4,6 @@ import com.cz.resource.baserecyclerviewadapterhelper.BaseGridMultiItemAdapter;
 import com.cz.resource.baserecyclerviewadapterhelper.BaseViewHolder;
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.data.entity.MultiItemInfo;
-import com.thedream.cz.myndkproject.utils.PrintUtil;
 
 /**
  * Created by cz on 2017/12/14.
@@ -35,7 +34,6 @@ public class FindMultiAdapter extends BaseGridMultiItemAdapter<MultiItemInfo, Ba
 
     @Override
     public int getSpanSizeByType(int viewType, int spanSize) {
-        PrintUtil.printCZ("getSpanSizeByType: " + viewType);
         if (viewType == TYPE_HEAD) {
             return spanSize;
         }

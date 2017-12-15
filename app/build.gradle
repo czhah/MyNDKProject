@@ -21,19 +21,19 @@ android {
                 abiFilters 'armeabi'
             }
         }
-        //  支持java 8
-        jackOptions {
-            enabled true
-        }
+//        //  支持java 8
+//        jackOptions {
+//            enabled true
+//        }
 
         //  解决方法超量
         multiDexEnabled true
 
-//        javaCompileOptions{
-//            annotationProcessorOptions{
-//                includeCompileClasspath = true
-//            }
-//        }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
 
     }
     buildTypes {
