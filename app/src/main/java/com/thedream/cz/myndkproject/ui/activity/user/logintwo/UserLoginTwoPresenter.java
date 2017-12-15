@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.thedream.cz.myndkproject.bean.WebResultInfo;
 import com.thedream.cz.myndkproject.data.CommonDataRepository;
 import com.thedream.cz.myndkproject.data.UserDataRepository;
+import com.thedream.cz.myndkproject.data.entity.CityInfo;
 import com.thedream.cz.myndkproject.data.entity.FileUpLoadInfo;
 import com.thedream.cz.myndkproject.data.entity.LoginInfo;
 import com.thedream.cz.myndkproject.listener.OnResultListener;
@@ -121,6 +122,32 @@ public class UserLoginTwoPresenter extends BaseMvpPresenter<UserLoginTwoView> {
             }
         });
 
+    }
+
+    public void getCity() {
+        getMvpView().showProgress(true);
+        mRepository.queryCityList(new OnResultListener<List<CityInfo>>() {
+            @Override
+            public void onSuccess(List<CityInfo> list) {
+                if (getMvpView() != null) {
+                    getMvpView().showProgress(false);
+                    if (list != null) {
+                        for (CityInfo info : list) {
+                            PrintUtil.printCZ("城市:" + info.toString());
+                        }
+                    }
+                    getMvpView().onResult("获取成功");
+                }
+            }
+
+            @Override
+            public void onFailed(int code) {
+                if (getMvpView() != null) {
+                    getMvpView().showProgress(false);
+                    getMvpView().onError(code);
+                }
+            }
+        });
     }
 
     public void downLoad() {

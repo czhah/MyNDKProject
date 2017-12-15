@@ -1,7 +1,10 @@
 package com.thedream.cz.myndkproject.data.remote;
 
 import com.thedream.cz.myndkproject.bean.WebResultInfo;
+import com.thedream.cz.myndkproject.data.entity.CityInfo;
 import com.thedream.cz.myndkproject.data.entity.LoginInfo;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -27,4 +30,7 @@ public interface IPublicApi {
     @GET("public?method=login&type=2&automaticLogin=0")
     Call<WebResultInfo<LoginInfo>> login2(@Query("username") String username, @Query("pwd") String pwd,
                                           @Query("language") String language);
+
+    @GET("public?method=getCity")
+    Observable<WebResultInfo<List<CityInfo>>> getCity();
 }

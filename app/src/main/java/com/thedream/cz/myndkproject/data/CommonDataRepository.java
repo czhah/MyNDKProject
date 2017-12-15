@@ -2,6 +2,7 @@ package com.thedream.cz.myndkproject.data;
 
 import com.thedream.cz.myndkproject.RetrofitFactory;
 import com.thedream.cz.myndkproject.bean.WebResultInfo;
+import com.thedream.cz.myndkproject.data.entity.CityInfo;
 import com.thedream.cz.myndkproject.data.entity.LoginInfo;
 import com.thedream.cz.myndkproject.data.local.dao.LoginDao;
 import com.thedream.cz.myndkproject.data.remote.IPublicApi;
@@ -128,6 +129,24 @@ public class CommonDataRepository {
 //                    PrintUtil.printCZ("subscribe 线程:" + Thread.currentThread());
 //
 //                }));
+    }
+
+
+    public void queryCityList(OnResultListener<List<CityInfo>> listener) {
+        RetrofitFactory.getRetrofit().create(iPublicApiClass)
+                .getCity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(listWebResultInfo -> {
+                    if (listWebResultInfo.getStatusCode() == WebResultInfo.RESULT_SUCCESS) {
+                        listener.onSuccess(listWebResultInfo.getData());
+                    } else {
+                        listener.onFailed(listWebResultInfo.getStatusCode());
+                    }
+                }, throwable -> {
+                    listener.onFailed(WebResultInfo.RESULT_FAILED);
+                });
+
     }
 
 }

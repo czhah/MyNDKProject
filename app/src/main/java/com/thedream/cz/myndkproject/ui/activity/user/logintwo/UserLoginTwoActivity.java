@@ -30,6 +30,11 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
         findViewById(R.id.btn_downLoad).setOnClickListener(view -> {
             getMvpPresenter().downLoad();
         });
+
+        findViewById(R.id.btn_city).setOnClickListener(view -> {
+            getMvpPresenter().getCity();
+        });
+
         FindTwoFragment findTwoFragment = (FindTwoFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frameLayout);
 
@@ -67,5 +72,14 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
     @Override
     public void showTip(String text) {
         ToastUtil.showToast(this, text);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mLoadingDialog != null && mLoadingDialog.isVisible()) {
+            mLoadingDialog.dismiss();
+            mLoadingDialog = null;
+        }
+        super.onDestroy();
     }
 }

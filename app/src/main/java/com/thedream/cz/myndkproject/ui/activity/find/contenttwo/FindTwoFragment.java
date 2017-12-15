@@ -15,6 +15,7 @@ import com.thedream.cz.myndkproject.mvp.factory.CreatePresenter;
 import com.thedream.cz.myndkproject.mvp.view.BaseMvpFragment;
 import com.thedream.cz.myndkproject.ui.adapter.FindMultiAdapter;
 import com.thedream.cz.myndkproject.ui.dialog.LoadingDialog;
+import com.thedream.cz.myndkproject.utils.PrintUtil;
 import com.thedream.cz.myndkproject.utils.ToastUtil;
 
 import java.util.List;
@@ -80,4 +81,13 @@ public class FindTwoFragment extends BaseMvpFragment<FindTwoView, FindTwoPresent
         ToastUtil.showResult(getContext(), result);
     }
 
+    @Override
+    public void onStop() {
+        PrintUtil.printCZ("onStop");
+        super.onStop();
+        if (mLoadingDialog != null && mLoadingDialog.isVisible()) {
+            mLoadingDialog.dismiss();
+            mLoadingDialog = null;
+        }
+    }
 }

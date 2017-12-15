@@ -57,8 +57,9 @@ public class RetrofitFactory {
                         .removeHeader("Pragma")
                         .build();
             } else {
+                PrintUtil.printCZ("没有网络");
                 //  没有网络时 直接读取缓存
-                int maxStale = 60 * 60 * 24 * 7;
+                int maxStale = 60 * 60 * 24;
                 return originalResponse.newBuilder()
                         .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
                         .removeHeader("Pragma")
@@ -71,7 +72,9 @@ public class RetrofitFactory {
 
         synchronized (RetrofitFactory.class) {
             if (retrofit == null) {
-                Cache cache = new Cache(new File(BaseApplication.mApplication.getCacheDir(), "httpclient"), AppConstant.NETWORK_CACHE_SIZE);
+                File file = new File(BaseApplication.mApplication.getCacheDir(), "httpclient");
+                PrintUtil.printCZ("缓存路径:" + file.getPath());
+                Cache cache = new Cache(file, AppConstant.NETWORK_CACHE_SIZE);
 
                 ClearableCookieJar cookieJar =
                         new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(BaseApplication.mApplication));
