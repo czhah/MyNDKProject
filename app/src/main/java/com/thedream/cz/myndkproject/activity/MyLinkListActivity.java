@@ -8,6 +8,13 @@ import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.bean.QuickSort;
 import com.thedream.cz.myndkproject.bean.ShellSort;
 import com.thedream.cz.myndkproject.bean.Tree;
+import com.thedream.cz.myndkproject.data.entity.BuilderInfo;
+import com.thedream.cz.myndkproject.data.entity.BusStrategy;
+import com.thedream.cz.myndkproject.data.entity.JiLiCarInfo;
+import com.thedream.cz.myndkproject.data.entity.PrototypeInfo;
+import com.thedream.cz.myndkproject.data.entity.SingletonInfo;
+import com.thedream.cz.myndkproject.data.entity.helper.CarFactory;
+import com.thedream.cz.myndkproject.data.entity.helper.TranficCalculator;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
 import java.util.ArrayList;
@@ -42,6 +49,76 @@ public class MyLinkListActivity extends AppCompatActivity {
         findViewById(R.id.btn_tree).setOnClickListener(v -> tree());
         findViewById(R.id.btn_shell).setOnClickListener(v -> shellSort());
         findViewById(R.id.btn_quick).setOnClickListener(view -> quickSort());
+        findViewById(R.id.btn_singleton).setOnClickListener(view -> singleton());
+        findViewById(R.id.btn_builder).setOnClickListener(view -> builder());
+        findViewById(R.id.btn_prototype).setOnClickListener(view -> prototype());
+        findViewById(R.id.btn_factory).setOnClickListener(view -> factory());
+        findViewById(R.id.btn_abstract).setOnClickListener(view -> abstractFactory());
+        findViewById(R.id.btn_strategy).setOnClickListener(view -> strategy());
+
+    }
+
+    /**
+     * 策略模式
+     */
+    private void strategy() {
+        TranficCalculator strategy = new TranficCalculator();
+        strategy.setCalculateStrategy(new BusStrategy());
+        PrintUtil.printCZ("策略模式: " + strategy.price(16));
+    }
+
+    /**
+     * 抽象工厂模式
+     */
+    private void abstractFactory() {
+        //  直接参考工厂模式，感觉区别不大
+        JiLiCarInfo carInfo = CarFactory.getCar(JiLiCarInfo.class);
+        if (carInfo != null) carInfo.show();
+    }
+
+    /**
+     * 工厂模式
+     */
+    private void factory() {
+        JiLiCarInfo carInfo = CarFactory.getCar(JiLiCarInfo.class);
+        if (carInfo != null) carInfo.show();
+    }
+
+    /**
+     * 原型模式
+     */
+    private void prototype() {
+        PrototypeInfo info = new PrototypeInfo();
+        info.setText("我是原始数据");
+        info.addImage("第一张图片");
+        info.addImage("第二张图片");
+        info.show();
+        PrototypeInfo newInfo = info.clone();
+        newInfo.show();
+
+        newInfo.setText("我修改一下");
+        newInfo.addImage("新增的图片");
+        newInfo.show();
+        info.show();
+    }
+
+    /**
+     * 建造者模式
+     */
+    private void builder() {
+        BuilderInfo info = new BuilderInfo.Builder()
+                .setAddress("坪洲")
+                .setAge(11)
+                .setName("cz")
+                .create();
+        info.show();
+    }
+
+    /**
+     * 单例模式
+     */
+    private void singleton() {
+        SingletonInfo.getInstance().show();
     }
 
     private void quickSort() {

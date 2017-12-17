@@ -40,4 +40,51 @@
         android:layout_height="wrap_content"
         android:text="快速排序"
         app:layout_constraintTop_toBottomOf="@id/btn_shell" />
+
+    <Button
+        android:id="@+id/btn_singleton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="单例模式"
+        app:layout_constraintLeft_toRightOf="@id/btn_single_link" />
+
+    <Button
+        android:id="@+id/btn_builder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="建造者模式"
+        app:layout_constraintTop_toBottomOf="@id/btn_singleton"
+        app:layout_constraintLeft_toRightOf="@id/btn_single_link" />
+
+    <Button
+        android:id="@+id/btn_prototype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="原型模式"
+        app:layout_constraintTop_toBottomOf="@id/btn_builder"
+        app:layout_constraintLeft_toRightOf="@id/btn_single_link" />
+
+    <Button
+        android:id="@+id/btn_factory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="工厂模式"
+        app:layout_constraintTop_toBottomOf="@id/btn_prototype"
+        app:layout_constraintLeft_toRightOf="@id/btn_single_link" />
+
+    <Button
+        android:id="@+id/btn_abstract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="抽象工厂模式"
+        app:layout_constraintTop_toBottomOf="@id/btn_factory"
+        app:layout_constraintLeft_toRightOf="@id/btn_single_link" />
+
+    <Button
+        android:id="@+id/btn_strategy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="策略模式"
+        app:layout_constraintTop_toBottomOf="@id/btn_abstract"
+        app:layout_constraintLeft_toRightOf="@id/btn_single_link" />
 </android.support.constraint.ConstraintLayout>

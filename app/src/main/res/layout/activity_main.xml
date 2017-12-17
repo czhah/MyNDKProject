@@ -6,108 +6,107 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_15"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="15测试多布局" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_14"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="14处理瀑布流"
-        app:layout_constraintTop_toBottomOf="@id/btn_15" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_13"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="13使用ROOM框架"
-        app:layout_constraintTop_toBottomOf="@id/btn_14" />
+            <Button
+                android:id="@+id/btn_15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="15测试多布局" />
 
-    <Button
-        android:id="@+id/btn_12"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="12测试Retrofit"
-        app:layout_constraintTop_toBottomOf="@id/btn_13" />
+            <Button
+                android:id="@+id/btn_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="14处理瀑布流" />
 
-    <Button
-        android:id="@+id/btn_11"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="11使用dragger"
-        app:layout_constraintTop_toBottomOf="@id/btn_12" />
+            <Button
+                android:id="@+id/btn_13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="13使用ROOM框架" />
 
-    <Button
-        android:id="@+id/btn_10"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="10使用MVVM架构"
-        app:layout_constraintTop_toBottomOf="@id/btn_11" />
+            <Button
+                android:id="@+id/btn_12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="12测试Retrofit" />
 
-    <Button
-        android:id="@+id/btn_09"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="09低功耗蓝牙"
-        app:layout_constraintTop_toBottomOf="@id/btn_10" />
+            <Button
+                android:id="@+id/btn_11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="11使用dragger" />
 
-    <Button
-        android:id="@+id/btn_08"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="08传统蓝牙"
-        app:layout_constraintTop_toBottomOf="@id/btn_09" />
+            <Button
+                android:id="@+id/btn_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10使用MVVM架构" />
 
-    <Button
-        android:id="@+id/btn_07"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="07单项链表 双向链表 二叉树"
-        app:layout_constraintTop_toBottomOf="@id/btn_08" />
+            <Button
+                android:id="@+id/btn_09"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="09低功耗蓝牙" />
 
-    <Button
-        android:id="@+id/btn_06"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="06换肤功能"
-        app:layout_constraintTop_toBottomOf="@id/btn_07" />
+            <Button
+                android:id="@+id/btn_08"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="08传统蓝牙" />
 
-    <Button
-        android:id="@+id/btn_05"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="05RecyclerView侧滑删除功能"
-        app:layout_constraintTop_toBottomOf="@id/btn_06" />
+            <Button
+                android:id="@+id/btn_07"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="07算法与设计模式" />
 
-    <Button
-        android:id="@+id/btn_04"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="04轮播图问题"
-        app:layout_constraintTop_toBottomOf="@id/btn_05" />
+            <Button
+                android:id="@+id/btn_06"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="06换肤功能" />
 
-    <Button
-        android:id="@+id/btn_03"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="03Bitmap创建问题"
-        app:layout_constraintTop_toBottomOf="@id/btn_04" />
+            <Button
+                android:id="@+id/btn_05"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="05RecyclerView侧滑删除功能" />
 
-    <Button
-        android:id="@+id/btn_02"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="02多段视频合成"
-        app:layout_constraintTop_toBottomOf="@id/btn_03" />
+            <Button
+                android:id="@+id/btn_04"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="04轮播图问题" />
 
-    <Button
-        android:id="@+id/btn_01"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="01音频播放"
-        app:layout_constraintTop_toBottomOf="@id/btn_02" />
+            <Button
+                android:id="@+id/btn_03"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="03Bitmap创建问题" />
+
+            <Button
+                android:id="@+id/btn_02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="02多段视频合成" />
+
+            <Button
+                android:id="@+id/btn_01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="01音频播放" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
