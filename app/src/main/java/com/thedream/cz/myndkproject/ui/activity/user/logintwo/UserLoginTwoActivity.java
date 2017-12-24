@@ -3,6 +3,8 @@ package com.thedream.cz.myndkproject.ui.activity.user.logintwo;
 import android.os.Bundle;
 
 import com.thedream.cz.myndkproject.R;
+import com.thedream.cz.myndkproject.data.entity.LoginStatus;
+import com.thedream.cz.myndkproject.data.entity.helper.UserLoginContext;
 import com.thedream.cz.myndkproject.mvp.factory.CreatePresenter;
 import com.thedream.cz.myndkproject.mvp.view.BaseMvpActivity;
 import com.thedream.cz.myndkproject.ui.activity.find.contenttwo.FindTwoFragment;
@@ -60,7 +62,8 @@ public class UserLoginTwoActivity extends BaseMvpActivity<UserLoginTwoView, User
     public void onResult(String result) {
         PrintUtil.printCZ("result：" + result);
         ToastUtil.showToast(this, result);
-
+        UserLoginContext.getInstance().setStatus(new LoginStatus());
+        finish();
     }
 
     @Override

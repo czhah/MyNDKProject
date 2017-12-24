@@ -57,7 +57,32 @@
         <activity android:name=".ui.activity.user.login.UserLoginActivity" />
         <activity android:name=".activity.MyRoomActivity" />
         <activity android:name=".ui.activity.find.content.FindActivity" />
-        <activity android:name=".ui.activity.user.logintwo.UserLoginTwoActivity"></activity>
+        <activity android:name=".ui.activity.user.logintwo.UserLoginTwoActivity" />
+
+        <receiver
+            android:name=".broadcast.FirstReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="com.thedream.cz.myndkproject.broadcast" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".broadcast.SecondReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="100">
+                <action android:name="com.thedream.cz.myndkproject.broadcast" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".broadcast.ThirdReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="10">
+                <action android:name="com.thedream.cz.myndkproject.broadcast" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -1,24 +1,35 @@
 package com.thedream.cz.myndkproject.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.bean.QuickSort;
 import com.thedream.cz.myndkproject.bean.ShellSort;
 import com.thedream.cz.myndkproject.bean.Tree;
+import com.thedream.cz.myndkproject.data.entity.BossLeader;
 import com.thedream.cz.myndkproject.data.entity.BuilderInfo;
 import com.thedream.cz.myndkproject.data.entity.BusStrategy;
+import com.thedream.cz.myndkproject.data.entity.Buttons;
+import com.thedream.cz.myndkproject.data.entity.GroupLoader;
 import com.thedream.cz.myndkproject.data.entity.JiLiCarInfo;
+import com.thedream.cz.myndkproject.data.entity.LeftCommand;
+import com.thedream.cz.myndkproject.data.entity.ManagerLeader;
 import com.thedream.cz.myndkproject.data.entity.PrototypeInfo;
+import com.thedream.cz.myndkproject.data.entity.RightCommand;
 import com.thedream.cz.myndkproject.data.entity.SingletonInfo;
+import com.thedream.cz.myndkproject.data.entity.TetrisMachine;
 import com.thedream.cz.myndkproject.data.entity.helper.CarFactory;
 import com.thedream.cz.myndkproject.data.entity.helper.TranficCalculator;
+import com.thedream.cz.myndkproject.data.entity.helper.UserLoginContext;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MyLinkListActivity extends AppCompatActivity {
 
@@ -26,25 +37,11 @@ public class MyLinkListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_link_list);
-
+        ButterKnife.bind(this);
         List<String> list = new ArrayList<>();
         list.add("haha");
         list.add("wuwuw");
         list.remove(0);
-
-        findViewById(R.id.btn_single_link).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        findViewById(R.id.btn_double_link).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         findViewById(R.id.btn_tree).setOnClickListener(v -> tree());
         findViewById(R.id.btn_shell).setOnClickListener(v -> shellSort());
@@ -56,6 +53,45 @@ public class MyLinkListActivity extends AppCompatActivity {
         findViewById(R.id.btn_abstract).setOnClickListener(view -> abstractFactory());
         findViewById(R.id.btn_strategy).setOnClickListener(view -> strategy());
 
+    }
+
+    @OnClick(R.id.btn_command)
+    public void command() {
+        //  命令模式
+        TetrisMachine tetrisMachine = new TetrisMachine();
+
+        LeftCommand leftCommand = new LeftCommand(tetrisMachine);
+        RightCommand rightCommand = new RightCommand(tetrisMachine);
+
+        Buttons buttons = new Buttons();
+        buttons.setLeftCommand(leftCommand);
+        buttons.setRightCommand(rightCommand);
+
+        buttons.toLeft();
+        buttons.toRight();
+    }
+
+    @OnClick(R.id.btn_iterator)
+    public void iterator() {
+        //  责任链模式
+        GroupLoader groupLoader = new GroupLoader();
+        ManagerLeader managerLeader = new ManagerLeader();
+        BossLeader bossLeader = new BossLeader();
+
+        groupLoader.nextHandle = managerLeader;
+        managerLeader.nextHandle = bossLeader;
+
+        groupLoader.handleRequest(9999);
+        Intent intent = new Intent("com.thedream.cz.myndkproject.broadcast");
+        intent.putExtra("limit", 100);
+        intent.putExtra("msg", "发出 广播");
+        sendOrderedBroadcast(intent, null);
+    }
+
+    @OnClick(R.id.btn_status)
+    public void status() {
+        //  状态模式
+        UserLoginContext.getInstance().forward(this);
     }
 
     /**

@@ -5,12 +5,10 @@ import com.thedream.cz.myndkproject.utils.PrintUtil;
 /**
  * Created by cz on 2017/12/17.
  * Builder模式
- * <p>
  * 1、Builder()创建一个Builder
  * 2、setter方法都返回的是Builder，也就是return this;
  * 3、最后create() 才创建想要的类 BuilderInfo
  * new Builder().setA().setB().create();
- * <p>
  * 优点：
  * 1、良好封装性，不必对外暴露实现细节
  * 2、便于扩展
