@@ -157,6 +157,9 @@ public class MyLinkListActivity extends AppCompatActivity {
         SingletonInfo.getInstance().show();
     }
 
+    /**
+     * 快速排序
+     */
     private void quickSort() {
         int maxSize = 16;
         QuickSort sort = new QuickSort(maxSize);
@@ -170,6 +173,9 @@ public class MyLinkListActivity extends AppCompatActivity {
         sort.diplay();
     }
 
+    /**
+     * 希尔排序
+     */
     private void shellSort() {
         int maxSize = 10;
         ShellSort shellSort = new ShellSort(maxSize);
@@ -182,6 +188,9 @@ public class MyLinkListActivity extends AppCompatActivity {
         shellSort.diplay();
     }
 
+    /**
+     * 二叉树
+     */
     private void tree() {
         Tree tree = new Tree();
 
