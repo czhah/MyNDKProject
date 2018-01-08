@@ -16,6 +16,12 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/btn_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="16RSA加密" />
+
+            <Button
                 android:id="@+id/btn_15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

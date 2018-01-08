@@ -83,6 +83,8 @@
                 <action android:name="com.thedream.cz.myndkproject.broadcast" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activity.RASActivity"></activity>
     </application>
 
 </manifest>
