@@ -15,10 +15,11 @@ import butterknife.OnClick;
 public class RASActivity extends AppCompatActivity {
 
     private String privateKey;
-    private String publicKey;
+    private String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDsgOoq7vCwUHTD9LKDGJMh7hSA/Y/YncEz8HVvNSGppNeM+rXjsRTGHmi+iz5WLI5sPxs0RMe9bUA5WDbNIBgCZQwApC7A5kL+IvFCUPdVEIlYyir4vOcyq2fC4WOPgtMAMShtqIipved+p+FxASCTIE/HTWzHftzZpQ2VfDGXMQIDAQAB";
     private String json;
     private String publicEncrypt;
     private String privateEncrypt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +77,9 @@ public class RASActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_public_decode)
     public void publicDecode() {
-        String json = "TkLxcCSRjDRJQIB6Wg4rLsPKANoPwvzwdldBPiyuPTWsXPUonzPtQUT6NdRqVa+O3VTHcilvJbTau3x4L77es5d2Ci2nkfaKu3gfvn7JLEyho1bRvlNahzXq7Vjk3wG/S+QiZDgWboSt4A/hd/bkXguvkjapj6Iy6exlMijmeFI=";
+        String json = "ejFXnVNkWeirM5nIpQpdubCEjou+DQON41PUSjdgg5EvOx2a20r/DKPfE9IfVCmFBBNb5JrI6QQgWB1IHbZGdnNYZTp4/51kHTzlTrXMsFCBLOjVjG3qvE923ya02ySHBCPrZ7ur7yy/L9Q1OgVwXKtmWxmQJHkQm/aHtn3fubQ=";
         try {
-            byte[] bytes = RSAUtil.decryptByPublicKey(Base64Util.decode(json), publicKey);
-            String publicDecode = new String(bytes);
+            String publicDecode = RSAUtil.decryptByPublicKey2(Base64Util.decode(json), publicKey);
             PrintUtil.printCZ("公钥解密后:" + publicDecode);
         } catch (Exception e) {
             e.printStackTrace();

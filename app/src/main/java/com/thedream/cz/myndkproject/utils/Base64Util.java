@@ -14,6 +14,6 @@ public class Base64Util {
     }
 
     public static String encode(byte[] sign) {
-        return new String(Base64.encode(sign, Base64.DEFAULT));
+        return Base64.encodeToString(sign, Base64.DEFAULT);
     }
 }

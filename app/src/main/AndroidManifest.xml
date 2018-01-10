@@ -84,7 +84,14 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.RASActivity"></activity>
+        <activity android:name=".activity.RASActivity" />
+
+        <service
+            android:name=".bluetool.BluetoothMultiDeviceService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".activity.MyBLEMultiConnectionActivity"></activity>
     </application>
 
 </manifest>

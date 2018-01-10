@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thedream.cz.myndkproject.activity.MyBLEMultiConnectionActivity">
+
+    <Button
+        android:id="@+id/btn_conn_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="连接设备1" />
+
+    <Button
+        android:id="@+id/btn_disconn_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_conn_one"
+        android:text="断开设备1"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_read_time_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_disconn_one"
+        android:text="读取设备1"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_write_time_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_read_time_one"
+        android:text="设置设备1"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_conn_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_one"
+        android:text="连接设备2" />
+
+    <Button
+        android:id="@+id/btn_disconn_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_conn_two"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_one"
+        android:text="断开设备2"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_read_time_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_disconn_two"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_one"
+        android:text="读取设备2"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_write_time_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_read_time_two"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_one"
+        android:text="设置设备2"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_conn_three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_two"
+        android:text="连接设备3" />
+
+    <Button
+        android:id="@+id/btn_disconn_three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_conn_two"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_two"
+        android:text="断开设备3"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_read_time_three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_disconn_two"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_two"
+        android:text="读取设备3"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btn_write_time_three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/btn_read_time_two"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_two"
+        android:text="设置设备3"
+        android:enabled="false" />
+
+    <TextView
+        android:id="@+id/tv_multi_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_conn_three" />
+
+    <TextView
+        android:id="@+id/tv_multi_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="操作结果"
+        app:layout_constraintTop_toBottomOf="@id/tv_multi_address" />
+
+</android.support.constraint.ConstraintLayout>

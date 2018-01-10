@@ -7,10 +7,11 @@ package com.thedream.cz.myndkproject.data.entity;
 public class FindInfo {
 
     private String text;
+
     private int width;
+
     private int height;
 
-    @Override
     public String toString() {
         return "FindInfo{" +
                 "text='" + text + '\'' +

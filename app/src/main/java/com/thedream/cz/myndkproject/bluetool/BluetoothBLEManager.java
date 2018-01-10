@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/11/15.
  */
-
+@Deprecated
 public class BluetoothBLEManager {
 
     private static final BluetoothBLEManager mBluetoothManager = new BluetoothBLEManager();

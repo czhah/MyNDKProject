@@ -29,6 +29,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MyBLEConnectActivity extends AppCompatActivity {
 
     private TextView tvDevice;
@@ -70,7 +73,7 @@ public class MyBLEConnectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_bleconnect);
-
+        ButterKnife.bind(this);
         tvDevice = (TextView) findViewById(R.id.tv_device);
         tvInfo = (TextView) findViewById(R.id.tv_info);
         btnConnection = (Button) findViewById(R.id.btn_connection);
@@ -134,12 +137,25 @@ public class MyBLEConnectActivity extends AppCompatActivity {
         tvDevice.setText("我的设备: " + mDeviceAddress);
     }
 
+    @OnClick(R.id.btn_connection_two)
+    public void connectionTwo() {
+        String[] addressArray = mDeviceAddress.split(",");
+        boolean connect = mBluetoothLeService.connect(addressArray[1]);
+        PrintUtil.printCZ("连接状态2: " + connect);
+    }
+
 
     private void connection() {
         btnConnection.setText("连接中...");
-        // Automatically connects to the device upon successful start-up initialization.
-        boolean connect = mBluetoothLeService.connect(mDeviceAddress);
-        PrintUtil.printCZ("连接状态: " + connect);
+        String[] addressArray = mDeviceAddress.split(",");
+        boolean connect = mBluetoothLeService.connect(addressArray[0]);
+        PrintUtil.printCZ("连接状态1: " + connect);
+//        for(String str : addressArray) {
+//            // Automatically connects to the device upon successful start-up initialization.
+//            boolean connect = mBluetoothLeService.connect(str);
+//            PrintUtil.printCZ("连接状态: " + connect);
+//        }
+
     }
 
     private void disconnection() {
@@ -316,23 +332,23 @@ public class MyBLEConnectActivity extends AppCompatActivity {
     }
 
     private void dispatchService(List<BluetoothGattService> services) {
-        PrintUtil.print("设备是否为空:" + (services == null));
+//        PrintUtil.print("设备是否为空:" + (services == null));
         if (services != null) {
-            PrintUtil.print("设备不为空: " + services.size());
+//            PrintUtil.print("设备不为空: " + services.size());
             for (BluetoothGattService service : services) {
                 if (hasTimeService(service) || hasActionService(service)) continue;
-                PrintUtil.print("service uuid:" + service.getUuid().toString() + " type:" + service.getType());
+//                PrintUtil.print("service uuid:" + service.getUuid().toString() + " type:" + service.getType());
                 List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
                 if (characteristics == null) continue;
                 for (BluetoothGattCharacteristic characteristic : characteristics) {
-                    PrintUtil.printCZ("characteristic uuid:" + characteristic.getUuid().toString()
-                            + " permissions:" + characteristic.getPermissions()
-                            + " properties:" + characteristic.getProperties()
-                            + " write type:" + characteristic.getWriteType());
+//                    PrintUtil.printCZ("characteristic uuid:" + characteristic.getUuid().toString()
+//                            + " permissions:" + characteristic.getPermissions()
+//                            + " properties:" + characteristic.getProperties()
+//                            + " write type:" + characteristic.getWriteType());
                     List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
                     if (descriptors == null || descriptors.size() == 0) continue;
                     for (BluetoothGattDescriptor descriptor : descriptors) {
-                        PrintUtil.print("descriptor uuid:" + descriptor.getUuid().toString());
+//                        PrintUtil.print("descriptor uuid:" + descriptor.getUuid().toString());
                     }
                 }
             }

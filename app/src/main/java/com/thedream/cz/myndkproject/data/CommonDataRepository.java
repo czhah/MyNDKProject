@@ -109,7 +109,7 @@ public class CommonDataRepository {
                     PrintUtil.printCZ("成功线程：" + Thread.currentThread());
                     listener.onSuccess(loginInfo);
                 }), (throwable -> {
-                    PrintUtil.printCZ("失败线程：" + Thread.currentThread());
+                    PrintUtil.printCZ("失败线程：" + throwable.toString());
                     listener.onFailed(WebResultInfo.RESULT_FAILED);
                 }));
 

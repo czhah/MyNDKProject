@@ -19,6 +19,7 @@ public class BaseApplication extends MultiDexApplication {
     private CommonDataRepository mCommonDataRepository;
     //  用户数据类
     private UserDataRepository mUserDataRepository;
+    private AppLocalData mAppLocalData;
     //  活动数据类
     //  好友数据类
 
@@ -27,9 +28,9 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
         mApplication = this;
 
-        AppLocalData mAppLocalData = AppLocalData.getInstance(mApplication);
+        mAppLocalData = AppLocalData.getInstance(mApplication);
 
-        mCommonDataRepository = CommonDataRepository.getInstance(mAppLocalData.getLoginDao());
+        mCommonDataRepository = CommonDataRepository.getInstance(mAppLocalData.loginDao());
 
         mUserDataRepository = UserDataRepository.getInstance();
     }
@@ -41,5 +42,9 @@ public class BaseApplication extends MultiDexApplication {
 
     public UserDataRepository getUserDataRepository() {
         return mUserDataRepository;
+    }
+
+    public AppLocalData getAppLocalData() {
+        return mAppLocalData;
     }
 }

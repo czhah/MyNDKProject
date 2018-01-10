@@ -21,6 +21,9 @@ import com.thedream.cz.myndkproject.R;
 import com.thedream.cz.myndkproject.bluetool.BluetoolGattAttributes;
 import com.thedream.cz.myndkproject.utils.PrintUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyBLEActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 101;
@@ -30,6 +33,9 @@ public class MyBLEActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
     private TextView tvDevice;
+
+    private StringBuffer sb = new StringBuffer();
+    private List<String> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +100,19 @@ public class MyBLEActivity extends AppCompatActivity {
     }
 
     private void connDevice() {
+        if (list.size() == 0) return;
+        for (String str : list) {
+            sb.append(str + ",");
+        }
+        sb.append("52:9F:4E:BE:77:2D");
+        mDeviceAddress = sb.toString();
         if (!TextUtils.isEmpty(mDeviceAddress)) {
-            Intent intent = new Intent(this, MyBLEConnectActivity.class);
+            Intent intent = new Intent(this, MyBLEMultiConnectionActivity.class);
             intent.putExtra(BluetoothDevice.class.getSimpleName(), mDeviceAddress);
             startActivity(intent);
         }
+
+
     }
 
     private void searchBLE() {
@@ -138,12 +152,15 @@ public class MyBLEActivity extends AppCompatActivity {
                 }
             };
 
+
     private void checkAndConnDevice(BluetoothDevice device) {
         String name = device.getName();
         String address = device.getAddress();
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(address)) return;
-        if (name.toLowerCase().contains("ihk-1509988") && BluetoothAdapter.checkBluetoothAddress(address)) {
-            searchDevice(false);
+        if (name.toLowerCase().contains("ihk") && BluetoothAdapter.checkBluetoothAddress(address)) {
+            if (device.getAddress() != null && !list.contains(device.getAddress())) {
+                list.add(device.getAddress());
+            }
             mDeviceAddress = device.getAddress();
             tvDevice.setText("我的设备:" + name + "  " + address);
         }
