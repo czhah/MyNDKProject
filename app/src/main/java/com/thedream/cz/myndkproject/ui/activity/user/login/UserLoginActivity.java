@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.thedream.cz.myndkproject.R;
-import com.thedream.cz.myndkproject.data.entity.CityInfo;
+import com.thedream.cz.myndkproject.data.entity.DrinkInfo;
 import com.thedream.cz.myndkproject.data.entity.LoginInfo;
 import com.thedream.cz.myndkproject.data.local.AppLocalData;
 import com.thedream.cz.myndkproject.listener.OnResultListener;
@@ -127,16 +127,14 @@ public class UserLoginActivity extends BaseActivity {
         Observable.create(new ObservableOnSubscribe<List<Long>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Long>> e) throws Exception {
-                List<CityInfo> list = new ArrayList<CityInfo>();
+                List<DrinkInfo> list = new ArrayList<DrinkInfo>();
                 for (int i = 0; i < 10; i++) {
-                    CityInfo info = new CityInfo();
+                    DrinkInfo info = new DrinkInfo();
                     info.setId("" + i);
-                    info.setCityName("城市" + i);
-                    info.setCityId(i * 10 + "");
+                    info.setWeight(i * 10 + "");
                     list.add(info);
                 }
-
-                e.onNext(AppLocalData.getInstance(UserLoginActivity.this).cityDao().insertCity(list));
+                e.onNext(AppLocalData.getInstance(UserLoginActivity.this).drinkDao().insertDrink(list));
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -159,18 +157,18 @@ public class UserLoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_query)
     public void query() {
-        Observable.create(new ObservableOnSubscribe<List<CityInfo>>() {
+        Observable.create(new ObservableOnSubscribe<List<DrinkInfo>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<CityInfo>> e) throws Exception {
-                e.onNext(AppLocalData.getInstance(UserLoginActivity.this).cityDao().queryCity());
+            public void subscribe(@NonNull ObservableEmitter<List<DrinkInfo>> e) throws Exception {
+                e.onNext(AppLocalData.getInstance(UserLoginActivity.this).drinkDao().queryDrink());
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<CityInfo>>() {
+                .subscribe(new Consumer<List<DrinkInfo>>() {
                     @Override
-                    public void accept(@NonNull List<CityInfo> cityInfos) throws Exception {
-                        if (cityInfos != null) {
-                            for (CityInfo info : cityInfos) {
+                    public void accept(@NonNull List<DrinkInfo> infoList) throws Exception {
+                        if (infoList != null) {
+                            for (DrinkInfo info : infoList) {
                                 PrintUtil.printCZ("查询:" + info.toString());
                             }
                         }

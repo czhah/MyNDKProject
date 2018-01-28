@@ -14,6 +14,7 @@ android {
             main {
                 jniLibs.srcDirs = ['libs']
             }
+            androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
         }
         externalNativeBuild {
             cmake {
@@ -21,19 +22,21 @@ android {
                 abiFilters 'armeabi'
             }
         }
-        //  支持java 8
-        jackOptions {
-            enabled true
-        }
+//        //  支持java 8
+//        jackOptions {
+//            enabled true
+//        }
 
         //  解决方法超量
         multiDexEnabled true
 
-//        javaCompileOptions{
-//            annotationProcessorOptions{
-//                includeCompileClasspath = true
-//            }
-//        }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
 
     }
     buildTypes {
@@ -70,6 +73,7 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
@@ -89,6 +93,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:design:26.1.0'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    testCompile 'android.arch.persistence.room:testing:1.0.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
 }

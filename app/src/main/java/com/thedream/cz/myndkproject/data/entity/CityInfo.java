@@ -24,12 +24,16 @@ public class CityInfo {
     @ColumnInfo(name = DatabaseConstant.FIELD_CITY_CID)
     private String cityId;
 
+    @ColumnInfo(name = DatabaseConstant.FIELD_CITY_ADDRESS)
+    private String address;
+
     @Override
     public String toString() {
         return "CityInfo{" +
                 "id='" + id + '\'' +
                 ", cityName='" + cityName + '\'' +
                 ", cityId='" + cityId + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 
@@ -55,5 +59,13 @@ public class CityInfo {
 
     public void setCityId(String cityId) {
         this.cityId = cityId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
